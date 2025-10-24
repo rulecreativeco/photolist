@@ -28,10 +28,32 @@
     button{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer}
     button.alt{background:#fff;color:var(--brand)}
     .hint{color:var(--muted);font-size:.9rem}
-    .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-    .group{border:1px solid var(--line);border-radius:16px;padding:14px}
-    .group h3{margin:0 0 8px 0;font-family:var(--font-accent);font-weight:700;font-size:1.1rem;color:#111}
-    .check{display:flex;align-items:flex-start;gap:10px;margin:6px 0;line-height:1.5}
+    /* 3 clean columns with breathing room */
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(280px, 1fr));
+  gap:16px 18px;               /* row x column gap */
+  align-items:start;
+}
+.grid-3 > div{min-width:0; padding-right:8px;}  /* prevents wrap-crunch on last column */
+
+/* Checkbox rows: box | text */
+.check{
+  display:grid;
+  grid-template-columns: 18px 1fr;
+  align-items:start;
+  gap:10px;
+  margin:8px 0;
+  line-height:1.5;
+  white-space:normal;
+  word-break:break-word;
+}
+.check input{margin-top:2px}
+
+/* Mobile fallbacks */
+@media (max-width:900px){ .grid-3{grid-template-columns:repeat(2, minmax(260px,1fr));} }
+@media (max-width:640px){ .grid-3{grid-template-columns:1fr;} }
+
     label.check input{flex:0 0 auto;margin-top:2px}
     .results{border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);margin-top:18px}
     .rl-item{display:grid;grid-template-columns:1fr;gap:8px;padding:12px 18px;border-top:1px dashed var(--line);background:#fff}
