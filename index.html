@@ -81,12 +81,11 @@ button.alt{background:#fff;color:var(--brand)}
 
     <div class="row">
       <div>
-        <label>How should we label you?</label>
+        <label>Label style</label>
         <select id="roleMode">
           <option value="bg">Bride / Groom</option>
           <option value="p12">Partner 1 / Partner 2</option>
         </select>
-        <div class="hint">Switch labels only. Functionality stays the same.</div>
       </div>
       <div>
         <label>Wedding date</label>
@@ -98,9 +97,6 @@ button.alt{background:#fff;color:var(--brand)}
       <div>
         <label>Your email (so Samantha can reply)</label>
         <input type="email" id="email" placeholder="you@example.com" />
-      </div>
-      <div>
-        <div class="hint" style="margin-top:34px">Most common options are auto-selected for you. Uncheck anything you don’t want.</div>
       </div>
     </div>
 
@@ -341,25 +337,6 @@ button.alt{background:#fff;color:var(--brand)}
     el('g_edge_toggle').addEventListener('change',()=>{ el('g_edge_wrap').hidden = !el('g_edge_toggle').checked; });
   }
 
-  // Auto-check common sets once
-  function applyDefaultsOnce(){
-    try{
-      if(localStorage.getItem('rcc_shotlist_defaults')==='1') return;
-      const ids = [
-        // Bride/Groom with each parent
-        'b_with_mom','b_with_dad','g_with_mom','g_with_dad',
-        // Couple + both sets of parents
-        'both_parents',
-        // Couple + both immediate families
-        'both_immediate',
-        // Couple + grandparents (both sides)
-        'grandparents_b','grandparents_g'
-      ];
-      ids.forEach(id=>{ const n=el(id); if(n) n.checked = true; });
-      localStorage.setItem('rcc_shotlist_defaults','1');
-    }catch(e){}
-  }
-
   function buildList(){
     const R = roles[roleMode];
     const role1 = R.r1, role2 = R.r2;
@@ -383,7 +360,7 @@ button.alt{background:#fff;color:var(--brand)}
 
     const sections=[];
 
-    // Role1 Family — interleaved sequence you wanted
+    // Role1 Family — interleaved sequence
     const role1Items=[];
     if(isOn('b_parents_together')) role1Items.push(`${role1} + ${bDad||'Dad'} + ${bMom||'Mom'}`);
     if(isOn('c_b_parents'))       role1Items.push(`Couple + ${bDad||role1s+' Dad'} + ${bMom||role1s+' Mom'}`);
@@ -442,7 +419,6 @@ button.alt{background:#fff;color:var(--brand)}
       if(gSibs.length) names.push(...gSibs);
       combined.push(names.join(' + '));
     }
-
     if(isOn('grandparents_b')) combined.push(joinOr(`${role1s} Grandparents`, gpB));
     if(isOn('grandparents_g')) combined.push(joinOr(`${role2s} Grandparents`, gpG));
     if(isOn('nieces_nephews')) combined.push(joinOr('Nieces/Nephews', niecesNephews));
@@ -457,8 +433,8 @@ button.alt{background:#fff;color:var(--brand)}
     // Party
     const party=[];
     if(isOn('wp_all'))         party.push('Couple + Entire Wedding Party');
-    if(isOn('wp_bridesmaids')) party.push(`${role1} + Bridesmaids`);
-    if(isOn('wp_groomsmen'))   party.push(`${role2} + Groomsmen`);
+    if(isOn('wp_bridesmaids')) party.push(`${roles[roleMode].r1} + Bridesmaids`);
+    if(isOn('wp_groomsmen'))   party.push(`${roles[roleMode].r2} + Groomsmen`);
     if(isOn('wp_individuals')) party.push('Individuals with each bridesmaid/groomsman');
     if(isOn('wp_fg_rb'))       party.push('Couple + Flower Girls / Ring Bearers');
     if(party.length) sections.push({title:"Wedding Party",items:party});
@@ -487,7 +463,6 @@ button.alt{background:#fff;color:var(--brand)}
     });
 
     el('results').hidden = false;
-    // Scroll to results
     el('results').scrollIntoView({behavior:'smooth', block:'start'});
   }
 
@@ -548,15 +523,11 @@ button.alt{background:#fff;color:var(--brand)}
 
   // Wire up
   document.addEventListener('DOMContentLoaded', ()=>{
-    // role mode switch
     el('roleMode').addEventListener('change', (e)=>{ roleMode = e.target.value; applyRoleLabels(); });
     applyRoleLabels();
-    wireEdgeToggles();
-    applyDefaultsOnce();
-
-    // show/hide edge groups initially
-    el('b_edge_wrap').hidden = !el('b_edge_toggle').checked;
-    el('g_edge_wrap').hidden = !el('g_edge_toggle').checked;
+    // edge groups show/hide
+    el('b_edge_toggle').addEventListener('change',()=>{ el('b_edge_wrap').hidden = !el('b_edge_toggle').checked; });
+    el('g_edge_toggle').addEventListener('change',()=>{ el('g_edge_wrap').hidden = !el('g_edge_toggle').checked; });
 
     el('gen').onclick = buildList;
     el('pdf').onclick = downloadPDF;
