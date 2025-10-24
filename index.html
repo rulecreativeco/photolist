@@ -15,7 +15,7 @@
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:var(--font-body);color:var(--fg);background:#fff}
-.wrap{max-width:940px;margin:28px auto;padding:0 28px 64px}
+.wrap{max-width:960px;margin:28px auto;padding:0 28px 64px}
 header.hero{text-align:center;padding:28px 18px}
 h1{font-family:var(--font-accent);font-weight:600;font-size:clamp(1.6rem,3vw,2.4rem);margin:0}
 .sub{color:var(--muted);margin:8px auto;font-size:1rem;max-width:820px}
@@ -26,16 +26,16 @@ h1{font-family:var(--font-accent);font-weight:600;font-size:clamp(1.6rem,3vw,2.4
 /* form layout */
 .row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 label{display:block;font-size:.9rem;margin:8px 0 6px;color:#111;font-weight:700}
-input, textarea{
+input, textarea, select{
   width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;
   outline:none;box-shadow:inset 0 1px 0 rgba(0,0,0,.02)
 }
-input:focus, textarea:focus{border-color:#c9b4a7;box-shadow:0 0 0 3px rgba(154,99,62,.12)}
+input:focus, textarea:focus, select:focus{border-color:#c9b4a7;box-shadow:0 0 0 3px rgba(154,99,62,.12)}
 textarea{min-height:90px;resize:vertical}
 .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;justify-content:center}
 button{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer}
 button.alt{background:#fff;color:var(--brand)}
-.hint{color:var(--muted);font-size:.9rem}
+.hint{color:var(--muted);font-size:.88rem;margin-top:6px}
 
 /* group sections */
 .group{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:22px 0}
@@ -53,6 +53,9 @@ button.alt{background:#fff;color:var(--brand)}
 .check{display:grid;grid-template-columns:18px 1fr;align-items:start;gap:10px;margin:6px 0;line-height:1.5}
 .check input{margin-top:2px}
 
+/* toggled sub-groups */
+.subgroup{border:1px dashed var(--line);border-radius:12px;padding:10px 12px;margin:10px 0 0 0;background:#fffdfb}
+
 @media(max-width:900px){.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.row{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr}}
 
@@ -60,6 +63,7 @@ button.alt{background:#fff;color:var(--brand)}
 .rl-item{padding:12px 18px;border-top:1px dashed var(--line);background:#fff}
 .rl-item:nth-child(even){background:#fffaf7}
 .rl-section{background:#fbf7f4;border-top:1px solid #f0e6df;font-weight:800;font-family:var(--font-accent);padding:14px 18px}
+.badge{display:inline-block;font-size:.8rem;color:#5b3a25;background:#f7efe9;border-radius:999px;padding:2px 10px;margin-left:8px}
 </style>
 </head>
 <body>
@@ -71,26 +75,51 @@ button.alt{background:#fff;color:var(--brand)}
 
   <div class="card" id="form">
     <div class="row">
-      <div><label>Bride’s first name</label><input id="bride" placeholder="e.g., Emma" /></div>
-      <div><label>Groom’s first name</label><input id="groom" placeholder="e.g., Noah" /></div>
+      <div><label id="lblRole1Name">Bride’s first name</label><input id="bride" placeholder="e.g., Emma" /></div>
+      <div><label id="lblRole2Name">Groom’s first name</label><input id="groom" placeholder="e.g., Noah" /></div>
     </div>
+
     <div class="row">
-      <div><label>Wedding date</label><input type="date" id="wDate" /></div>
-      <div><label>Your email (so Samantha can reply)</label><input type="email" id="email" placeholder="you@example.com" /></div>
+      <div>
+        <label>How should we label you?</label>
+        <select id="roleMode">
+          <option value="bg">Bride / Groom</option>
+          <option value="p12">Partner 1 / Partner 2</option>
+        </select>
+        <div class="hint">Switch labels only. Functionality stays the same.</div>
+      </div>
+      <div>
+        <label>Wedding date</label>
+        <input type="date" id="wDate" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Your email (so Samantha can reply)</label>
+        <input type="email" id="email" placeholder="you@example.com" />
+      </div>
+      <div>
+        <div class="hint" style="margin-top:34px">Most common options are auto-selected for you. Uncheck anything you don’t want.</div>
+      </div>
     </div>
 
     <div class="group">
-      <h3>Family names</h3>
+      <h3 id="hNames">Family names</h3>
       <div class="grid-3">
         <div>
-          <label>Bride’s dad</label><input id="b_dad" placeholder="e.g., Tom" />
-          <label>Bride’s mom</label><input id="b_mom" placeholder="e.g., Nancy" />
-          <label>Bride’s siblings (comma-separated)</label><input id="b_siblings_names" placeholder="e.g., Lily, Grace" />
+          <label id="lblRole1Dad">Bride’s dad</label><input id="b_dad" placeholder="e.g., Tom" />
+          <label id="lblRole1Mom">Bride’s mom</label><input id="b_mom" placeholder="e.g., Nancy" />
+          <label id="lblRole1Sibs">Bride’s siblings (separate with commas)</label>
+          <input id="b_siblings_names" placeholder="e.g., Lily, Grace" />
+          <div class="hint">Separate with commas. Nicknames are okay!</div>
         </div>
         <div>
-          <label>Groom’s dad</label><input id="g_dad" placeholder="e.g., Mark" />
-          <label>Groom’s mom</label><input id="g_mom" placeholder="e.g., Susan" />
-          <label>Groom’s siblings (comma-separated)</label><input id="g_siblings_names" placeholder="e.g., Jake, Ava" />
+          <label id="lblRole2Dad">Groom’s dad</label><input id="g_dad" placeholder="e.g., Mark" />
+          <label id="lblRole2Mom">Groom’s mom</label><input id="g_mom" placeholder="e.g., Susan" />
+          <label id="lblRole2Sibs">Groom’s siblings (separate with commas)</label>
+          <input id="g_siblings_names" placeholder="e.g., Jake, Ava" />
+          <div class="hint">Separate with commas. Nicknames are okay!</div>
         </div>
       </div>
     </div>
@@ -98,53 +127,79 @@ button.alt{background:#fff;color:var(--brand)}
     <div class="group">
       <h3>Family combinations</h3>
       <div class="grid-3" style="margin-bottom:6px">
-        <div><strong>Bride’s Side</strong></div>
-        <div><strong>Groom’s Side</strong></div>
+        <div><strong id="hRole1Col">Bride’s Side</strong></div>
+        <div><strong id="hRole2Col">Groom’s Side</strong></div>
         <div><strong>Couple</strong></div>
       </div>
 
       <div class="grid-3">
-        <!-- Bride Side (intermixed with Couple + Bride’s … and generated in that same order) -->
+        <!-- Role1 (Bride by default) -->
         <div>
-          <label class="check"><input type="checkbox" id="b_parents_together">Bride + Parents together</label>
-          <label class="check"><input type="checkbox" id="c_b_parents">Couple + Bride’s Parents together</label>
+          <label class="check"><input type="checkbox" id="b_parents_together"><span id="tx_b_parents">Bride + Parents together</span></label>
+          <label class="check"><input type="checkbox" id="c_b_parents"><span id="tx_c_b_parents">Couple + Bride’s Parents together</span></label>
 
-          <label class="check"><input type="checkbox" id="b_with_mom">Bride + Mom</label>
-          <label class="check"><input type="checkbox" id="c_b_mom">Couple + Bride’s Mom</label>
+          <label class="check"><input type="checkbox" id="b_with_mom"><span id="tx_b_mom">Bride + Mom</span></label>
+          <label class="check"><input type="checkbox" id="c_b_mom"><span id="tx_c_b_mom">Couple + Bride’s Mom</span></label>
 
-          <label class="check"><input type="checkbox" id="b_with_dad">Bride + Dad</label>
-          <label class="check"><input type="checkbox" id="c_b_dad">Couple + Bride’s Dad</label>
+          <label class="check"><input type="checkbox" id="b_with_dad"><span id="tx_b_dad">Bride + Dad</span></label>
+          <label class="check"><input type="checkbox" id="c_b_dad"><span id="tx_c_b_dad">Couple + Bride’s Dad</span></label>
 
-          <label class="check"><input type="checkbox" id="b_siblings">Bride + Siblings</label>
-          <label class="check"><input type="checkbox" id="c_b_sibs">Couple + Bride’s Siblings</label>
+          <label class="check"><input type="checkbox" id="b_siblings"><span id="tx_b_sibs">Bride + Siblings</span></label>
+          <label class="check"><input type="checkbox" id="c_b_sibs"><span id="tx_c_b_sibs">Couple + Bride’s Siblings</span></label>
 
-          <label class="check"><input type="checkbox" id="b_immediate">Bride + Immediate Family</label>
-          <label class="check"><input type="checkbox" id="c_b_immediate">Couple + Bride’s Immediate Family</label>
+          <label class="check"><input type="checkbox" id="b_immediate"><span id="tx_b_immediate">Bride + Immediate Family</span></label>
+          <label class="check"><input type="checkbox" id="c_b_immediate"><span id="tx_c_b_immediate">Couple + Bride’s Immediate Family</span></label>
+
+          <!-- Edge cases: divorced/step for role1 -->
+          <div class="subgroup">
+            <label class="check"><input type="checkbox" id="b_edge_toggle">Divorced/step-parents (Bride’s side)</label>
+            <div id="b_edge_wrap" hidden>
+              <label class="check"><input type="checkbox" id="b_mom_stepdad"><span id="tx_b_mom_stepdad">Bride + Mom + Stepfather</span></label>
+              <label class="check"><input type="checkbox" id="b_dad_stepmom"><span id="tx_b_dad_stepmom">Bride + Dad + Stepmother</span></label>
+              <label class="check"><input type="checkbox" id="c_b_mom_stepdad"><span id="tx_c_b_mom_stepdad">Couple + Mom + Stepfather</span></label>
+              <label class="check"><input type="checkbox" id="c_b_dad_stepmom"><span id="tx_c_b_dad_stepmom">Couple + Dad + Stepmother</span></label>
+            </div>
+          </div>
         </div>
 
-        <!-- Groom Side (intermixed with Couple + Groom’s … and generated in that same order) -->
+        <!-- Role2 (Groom by default) -->
         <div>
-          <label class="check"><input type="checkbox" id="g_parents_together">Groom + Parents together</label>
-          <label class="check"><input type="checkbox" id="c_g_parents">Couple + Groom’s Parents together</label>
+          <label class="check"><input type="checkbox" id="g_parents_together"><span id="tx_g_parents">Groom + Parents together</span></label>
+          <label class="check"><input type="checkbox" id="c_g_parents"><span id="tx_c_g_parents">Couple + Groom’s Parents together</span></label>
 
-          <label class="check"><input type="checkbox" id="g_with_mom">Groom + Mom</label>
-          <label class="check"><input type="checkbox" id="c_g_mom">Couple + Groom’s Mom</label>
+          <label class="check"><input type="checkbox" id="g_with_mom"><span id="tx_g_mom">Groom + Mom</span></label>
+          <label class="check"><input type="checkbox" id="c_g_mom"><span id="tx_c_g_mom">Couple + Groom’s Mom</span></label>
 
-          <label class="check"><input type="checkbox" id="g_with_dad">Groom + Dad</label>
-          <label class="check"><input type="checkbox" id="c_g_dad">Couple + Groom’s Dad</label>
+          <label class="check"><input type="checkbox" id="g_with_dad"><span id="tx_g_dad">Groom + Dad</span></label>
+          <label class="check"><input type="checkbox" id="c_g_dad"><span id="tx_c_g_dad">Couple + Groom’s Dad</span></label>
 
-          <label class="check"><input type="checkbox" id="g_siblings">Groom + Siblings</label>
-          <label class="check"><input type="checkbox" id="c_g_sibs">Couple + Groom’s Siblings</label>
+          <label class="check"><input type="checkbox" id="g_siblings"><span id="tx_g_sibs">Groom + Siblings</span></label>
+          <label class="check"><input type="checkbox" id="c_g_sibs"><span id="tx_c_g_sibs">Couple + Groom’s Siblings</span></label>
 
-          <label class="check"><input type="checkbox" id="g_immediate">Groom + Immediate Family</label>
-          <label class="check"><input type="checkbox" id="c_g_immediate">Couple + Groom’s Immediate Family</label>
+          <label class="check"><input type="checkbox" id="g_immediate"><span id="tx_g_immediate">Groom + Immediate Family</span></label>
+          <label class="check"><input type="checkbox" id="c_g_immediate"><span id="tx_c_g_immediate">Couple + Groom’s Immediate Family</span></label>
+
+          <!-- Edge cases: divorced/step for role2 -->
+          <div class="subgroup">
+            <label class="check"><input type="checkbox" id="g_edge_toggle">Divorced/step-parents (Groom’s side)</label>
+            <div id="g_edge_wrap" hidden>
+              <label class="check"><input type="checkbox" id="g_mom_stepdad"><span id="tx_g_mom_stepdad">Groom + Mom + Stepfather</span></label>
+              <label class="check"><input type="checkbox" id="g_dad_stepmom"><span id="tx_g_dad_stepmom">Groom + Dad + Stepmother</span></label>
+              <label class="check"><input type="checkbox" id="c_g_mom_stepdad"><span id="tx_c_g_mom_stepdad">Couple + Mom + Stepfather</span></label>
+              <label class="check"><input type="checkbox" id="c_g_dad_stepmom"><span id="tx_c_g_dad_stepmom">Couple + Dad + Stepmother</span></label>
+            </div>
+          </div>
         </div>
 
-        <!-- Couple column (general combined groups) -->
+        <!-- Couple column -->
         <div>
           <label class="check"><input type="checkbox" id="both_parents">Couple + Both Sets of Parents</label>
           <label class="check"><input type="checkbox" id="both_immediate">Couple + Both Immediate Families</label>
-          <label class="check"><input type="checkbox" id="grandparents">Couple + Grandparents</label>
+
+          <!-- Split grandparents by side -->
+          <label class="check"><input type="checkbox" id="grandparents_b">Couple + Bride’s Grandparents</label>
+          <label class="check"><input type="checkbox" id="grandparents_g">Couple + Groom’s Grandparents</label>
+
           <label class="check"><input type="checkbox" id="nieces_nephews">Couple + Nieces/Nephews</label>
           <label class="check"><input type="checkbox" id="extended">Couple + Extended Family</label>
           <label class="check"><input type="checkbox" id="couple_aunts_uncles">Couple + Aunts/Uncles</label>
@@ -158,31 +213,32 @@ button.alt{background:#fff;color:var(--brand)}
       <textarea id="customAdds" placeholder="Bride + College friends&#10;Groom + Godparents"></textarea>
     </div>
 
-    <!-- NEW: Names for combined groups -->
+    <!-- Names for combined groups -->
     <div class="group">
       <h3>Names for combined groups (optional)</h3>
       <div class="grid-3">
         <div>
-          <label>Bride’s grandparents (comma-separated)</label>
+          <label>Bride’s grandparents (separate with commas)</label>
           <input id="names_gp_b" placeholder="e.g., Alice, Robert" />
-          <label>Nieces & nephews (comma-separated)</label>
+          <label>Nieces & nephews (separate with commas)</label>
           <input id="names_nieces_nephews" placeholder="e.g., Mia, Carter" />
         </div>
         <div>
-          <label>Groom’s grandparents (comma-separated)</label>
+          <label>Groom’s grandparents (separate with commas)</label>
           <input id="names_gp_g" placeholder="e.g., Evelyn, Frank" />
-          <label>Aunts & uncles (comma-separated)</label>
+          <label>Aunts & uncles (separate with commas)</label>
           <input id="names_aunts_uncles" placeholder="e.g., Anne, Paul" />
         </div>
         <div>
-          <label>Cousins (comma-separated)</label>
+          <label>Cousins (separate with commas)</label>
           <input id="names_cousins" placeholder="e.g., Josh, Lena" />
-          <label>Godparents (comma-separated)</label>
+          <label>Godparents (separate with commas)</label>
           <input id="names_godparents" placeholder="e.g., Maria, Victor" />
-          <label>Close friends (comma-separated)</label>
+          <label>Close friends (separate with commas)</label>
           <input id="names_friends" placeholder="e.g., Kate, Drew" />
         </div>
       </div>
+      <div class="hint">Separate with commas. Nicknames are okay!</div>
     </div>
 
     <div class="group">
@@ -198,36 +254,122 @@ button.alt{background:#fff;color:var(--brand)}
           <label class="check"><input type="checkbox" id="wp_fg_rb">Couple + Flower Girls / Ring Bearers</label>
         </div>
       </div>
-      <label>Special requests (optional)</label>
+      <label>Anything we can’t miss? VIPs, surprises, or special considerations.</label>
       <textarea id="special" placeholder="Any must-have groupings or VIPs we can’t miss"></textarea>
     </div>
 
     <div class="controls">
-      <button id="gen">Generate List</button>
+      <button id="gen">Build My Shot List</button>
       <button class="alt" id="pdf">Download PDF</button>
-      <button class="alt" id="send">Send to Samantha</button>
+      <button class="alt" id="send">Share with Samantha</button>
     </div>
   </div>
 
   <div class="results" id="results" hidden>
-    <div class="rl-section">Shot List (draft) – Samantha’s suggested groupings</div>
+    <div class="rl-section">Shot List (draft) – Samantha’s suggested groupings <span class="badge">(sequence optimized for day-of flow)</span></div>
     <div id="rlList"></div>
   </div>
 </div>
 
 <script>
 (function(){
-  const el=id=>document.getElementById(id);
-  const val = (id)=> (el(id)?.value || '').trim();
-  const list = (id)=> val(id).split(',').map(s=>s.trim()).filter(Boolean);
-  const isOn = (id)=> !!(el(id) && el(id).checked);
+  const el = id => document.getElementById(id);
+  const val = id => (el(id)?.value || '').trim();
+  const list = id => val(id).split(',').map(s=>s.trim()).filter(Boolean);
+  const isOn = id => !!(el(id) && el(id).checked);
+
+  // Role labels (Bride/Groom or Partner 1/Partner 2)
+  const roles = {
+    bg: { r1: 'Bride', r2: 'Groom', r1s: "Bride’s", r2s: "Groom’s" },
+    p12:{ r1: 'Partner 1', r2: 'Partner 2', r1s: "Partner 1’s", r2s: "Partner 2’s" }
+  };
+  let roleMode = 'bg';
+
+  function applyRoleLabels(){
+    const R = roles[roleMode];
+    // Top labels
+    el('lblRole1Name').textContent = `${R.r1}’s first name`;
+    el('lblRole2Name').textContent = `${R.r2}’s first name`;
+    // Names section
+    el('lblRole1Dad').textContent = `${R.r1s} dad`;
+    el('lblRole1Mom').textContent = `${R.r1s} mom`;
+    el('lblRole1Sibs').textContent = `${R.r1s} siblings (separate with commas)`;
+    el('lblRole2Dad').textContent = `${R.r2s} dad`;
+    el('lblRole2Mom').textContent = `${R.r2s} mom`;
+    el('lblRole2Sibs').textContent = `${R.r2s} siblings (separate with commas)`;
+    // Column headers
+    el('hRole1Col').textContent = `${R.r1s} Side`;
+    el('hRole2Col').textContent = `${R.r2s} Side`;
+    el('hNames').textContent = 'Family names';
+
+    // Checkbox text blocks (interleaved order)
+    const setText = (id, txt) => { const n = el(id); if(n) n.textContent = txt; };
+    setText('tx_b_parents', `${R.r1} + Parents together`);
+    setText('tx_c_b_parents', `Couple + ${R.r1s} Parents together`);
+    setText('tx_b_mom', `${R.r1} + Mom`);
+    setText('tx_c_b_mom', `Couple + ${R.r1s} Mom`);
+    setText('tx_b_dad', `${R.r1} + Dad`);
+    setText('tx_c_b_dad', `Couple + ${R.r1s} Dad`);
+    setText('tx_b_sibs', `${R.r1} + Siblings`);
+    setText('tx_c_b_sibs', `Couple + ${R.r1s} Siblings`);
+    setText('tx_b_immediate', `${R.r1} + Immediate Family`);
+    setText('tx_c_b_immediate', `Couple + ${R.r1s} Immediate Family`);
+    setText('tx_b_mom_stepdad', `${R.r1} + Mom + Stepfather`);
+    setText('tx_b_dad_stepmom', `${R.r1} + Dad + Stepmother`);
+    setText('tx_c_b_mom_stepdad', `Couple + Mom + Stepfather`);
+    setText('tx_c_b_dad_stepmom', `Couple + Dad + Stepmother`);
+
+    setText('tx_g_parents', `${R.r2} + Parents together`);
+    setText('tx_c_g_parents', `Couple + ${R.r2s} Parents together`);
+    setText('tx_g_mom', `${R.r2} + Mom`);
+    setText('tx_c_g_mom', `Couple + ${R.r2s} Mom`);
+    setText('tx_g_dad', `${R.r2} + Dad`);
+    setText('tx_c_g_dad', `Couple + ${R.r2s} Dad`);
+    setText('tx_g_sibs', `${R.r2} + Siblings`);
+    setText('tx_c_g_sibs', `Couple + ${R.r2s} Siblings`);
+    setText('tx_g_immediate', `${R.r2} + Immediate Family`);
+    setText('tx_c_g_immediate', `Couple + ${R.r2s} Immediate Family`);
+    setText('tx_g_mom_stepdad', `${R.r2} + Mom + Stepfather`);
+    setText('tx_g_dad_stepmom', `${R.r2} + Dad + Stepmother`);
+    setText('tx_c_g_mom_stepdad', `Couple + Mom + Stepfather`);
+    setText('tx_c_g_dad_stepmom', `Couple + Dad + Stepmother`);
+  }
+
+  // Reveal edge-case subgroups
+  function wireEdgeToggles(){
+    el('b_edge_toggle').addEventListener('change',()=>{ el('b_edge_wrap').hidden = !el('b_edge_toggle').checked; });
+    el('g_edge_toggle').addEventListener('change',()=>{ el('g_edge_wrap').hidden = !el('g_edge_toggle').checked; });
+  }
+
+  // Auto-check common sets once
+  function applyDefaultsOnce(){
+    try{
+      if(localStorage.getItem('rcc_shotlist_defaults')==='1') return;
+      const ids = [
+        // Bride/Groom with each parent
+        'b_with_mom','b_with_dad','g_with_mom','g_with_dad',
+        // Couple + both sets of parents
+        'both_parents',
+        // Couple + both immediate families
+        'both_immediate',
+        // Couple + grandparents (both sides)
+        'grandparents_b','grandparents_g'
+      ];
+      ids.forEach(id=>{ const n=el(id); if(n) n.checked = true; });
+      localStorage.setItem('rcc_shotlist_defaults','1');
+    }catch(e){}
+  }
 
   function buildList(){
-    const bride=val('bride')||'Bride';
-    const groom=val('groom')||'Groom';
-    const wDate=val('wDate');
+    const R = roles[roleMode];
+    const role1 = R.r1, role2 = R.r2;
+    const role1s = R.r1s, role2s = R.r2s;
 
-    // Core names
+    const p1 = val('bride') || role1;
+    const p2 = val('groom') || role2;
+    const wDate = val('wDate');
+
+    // Names
     const bDad=val('b_dad'), bMom=val('b_mom'), gDad=val('g_dad'), gMom=val('g_mom');
     const bSibs=list('b_siblings_names'), gSibs=list('g_siblings_names');
 
@@ -241,121 +383,121 @@ button.alt{background:#fff;color:var(--brand)}
 
     const sections=[];
 
-    // Bride’s Family — in your desired order (with Couple variants interleaved)
-    const brideItems=[];
-    if(isOn('b_parents_together')) brideItems.push(`Bride + ${bDad||'Dad'} + ${bMom||'Mom'}`);
-    if(isOn('c_b_parents'))       brideItems.push(`Couple + ${bDad||"Bride’s Dad"} + ${bMom||"Bride’s Mom"}`);
+    // Role1 Family — interleaved sequence you wanted
+    const role1Items=[];
+    if(isOn('b_parents_together')) role1Items.push(`${role1} + ${bDad||'Dad'} + ${bMom||'Mom'}`);
+    if(isOn('c_b_parents'))       role1Items.push(`Couple + ${bDad||role1s+' Dad'} + ${bMom||role1s+' Mom'}`);
+    if(isOn('b_with_mom'))        role1Items.push(`${role1} + ${bMom||'Mom'}`);
+    if(isOn('c_b_mom'))           role1Items.push(`Couple + ${bMom||role1s+' Mom'}`);
+    if(isOn('b_with_dad'))        role1Items.push(`${role1} + ${bDad||'Dad'}`);
+    if(isOn('c_b_dad'))           role1Items.push(`Couple + ${bDad||role1s+' Dad'}`);
+    if(isOn('b_siblings'))        role1Items.push(`${role1} + ${bSibs.length ? bSibs.join(' + ') : 'Siblings'}`);
+    if(isOn('c_b_sibs'))          role1Items.push(`Couple + ${bSibs.length ? bSibs.join(' + ') : role1s+' Siblings'}`);
+    if(isOn('b_immediate')){ const parts=[role1,(bDad||'Dad'),(bMom||'Mom')]; if(bSibs.length) parts.push(...bSibs); role1Items.push(parts.join(' + ')); }
+    if(isOn('c_b_immediate')){ const arr=['Couple']; if(bDad||bMom) arr.push(bDad||role1s+' Dad', bMom||role1s+' Mom'); if(bSibs.length) arr.push(...bSibs); role1Items.push(arr.join(' + ')); }
 
-    if(isOn('b_with_mom'))        brideItems.push(`Bride + ${bMom||'Mom'}`);
-    if(isOn('c_b_mom'))           brideItems.push(`Couple + ${bMom||"Bride’s Mom"}`);
-
-    if(isOn('b_with_dad'))        brideItems.push(`Bride + ${bDad||'Dad'}`);
-    if(isOn('c_b_dad'))           brideItems.push(`Couple + ${bDad||"Bride’s Dad"}`);
-
-    if(isOn('b_siblings'))        brideItems.push(`Bride + ${bSibs.length ? bSibs.join(' + ') : 'Siblings'}`);
-    if(isOn('c_b_sibs'))          brideItems.push(`Couple + ${bSibs.length ? bSibs.join(' + ') : "Bride’s Siblings"}`);
-
-    if(isOn('b_immediate')){
-      const parts=['Bride',(bDad||'Dad'),(bMom||'Mom')]; if(bSibs.length) parts.push(...bSibs);
-      brideItems.push(parts.join(' + '));
+    // Edge combos role1
+    if(isOn('b_edge_toggle')){
+      if(isOn('b_mom_stepdad'))     role1Items.push(`${role1} + Mom + Stepfather`);
+      if(isOn('b_dad_stepmom'))     role1Items.push(`${role1} + Dad + Stepmother`);
+      if(isOn('c_b_mom_stepdad'))   role1Items.push(`Couple + Mom + Stepfather`);
+      if(isOn('c_b_dad_stepmom'))   role1Items.push(`Couple + Dad + Stepmother`);
     }
-    if(isOn('c_b_immediate')){
-      const arr=['Couple']; if(bDad||bMom) arr.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom"); if(bSibs.length) arr.push(...bSibs);
-      brideItems.push(arr.join(' + '));
+
+    if(role1Items.length) sections.push({title:`${role1s} Family`, items: role1Items});
+
+    // Role2 Family — interleaved sequence
+    const role2Items=[];
+    if(isOn('g_parents_together')) role2Items.push(`${role2} + ${gDad||'Dad'} + ${gMom||'Mom'}`);
+    if(isOn('c_g_parents'))       role2Items.push(`Couple + ${gDad||role2s+' Dad'} + ${gMom||role2s+' Mom'}`);
+    if(isOn('g_with_mom'))        role2Items.push(`${role2} + ${gMom||'Mom'}`);
+    if(isOn('c_g_mom'))           role2Items.push(`Couple + ${gMom||role2s+' Mom'}`);
+    if(isOn('g_with_dad'))        role2Items.push(`${role2} + ${gDad||'Dad'}`);
+    if(isOn('c_g_dad'))           role2Items.push(`Couple + ${gDad||role2s+' Dad'}`);
+    if(isOn('g_siblings'))        role2Items.push(`${role2} + ${gSibs.length ? gSibs.join(' + ') : 'Siblings'}`);
+    if(isOn('c_g_sibs'))          role2Items.push(`Couple + ${gSibs.length ? gSibs.join(' + ') : role2s+' Siblings'}`);
+    if(isOn('g_immediate')){ const parts=[role2,(gDad||'Dad'),(gMom||'Mom')]; if(gSibs.length) parts.push(...gSibs); role2Items.push(parts.join(' + ')); }
+    if(isOn('c_g_immediate')){ const arr=['Couple']; if(gDad||gMom) arr.push(gDad||role2s+' Dad', gMom||role2s+' Mom'); if(gSibs.length) arr.push(...gSibs); role2Items.push(arr.join(' + ')); }
+
+    // Edge combos role2
+    if(isOn('g_edge_toggle')){
+      if(isOn('g_mom_stepdad'))     role2Items.push(`${role2} + Mom + Stepfather`);
+      if(isOn('g_dad_stepmom'))     role2Items.push(`${role2} + Dad + Stepmother`);
+      if(isOn('c_g_mom_stepdad'))   role2Items.push(`Couple + Mom + Stepfather`);
+      if(isOn('c_g_dad_stepmom'))   role2Items.push(`Couple + Dad + Stepmother`);
     }
-    if(brideItems.length) sections.push({title:"Bride’s Family",items:brideItems});
 
-    // Groom’s Family — same interleaved order
-    const groomItems=[];
-    if(isOn('g_parents_together')) groomItems.push(`Groom + ${gDad||'Dad'} + ${gMom||'Mom'}`);
-    if(isOn('c_g_parents'))       groomItems.push(`Couple + ${gDad||"Groom’s Dad"} + ${gMom||"Groom’s Mom"}`);
+    if(role2Items.length) sections.push({title:`${role2s} Family`, items: role2Items});
 
-    if(isOn('g_with_mom'))        groomItems.push(`Groom + ${gMom||'Mom'}`);
-    if(isOn('c_g_mom'))           groomItems.push(`Couple + ${gMom||"Groom’s Mom"}`);
+    // Combined / Couple+ (names-aware)
+    const combined = [];
+    const joinOr = (label, arr) => arr.length ? `Couple + ${arr.join(' + ')}` : `Couple + ${label}`;
 
-    if(isOn('g_with_dad'))        groomItems.push(`Groom + ${gDad||'Dad'}`);
-    if(isOn('c_g_dad'))           groomItems.push(`Couple + ${gDad||"Groom’s Dad"}`);
-
-    if(isOn('g_siblings'))        groomItems.push(`Groom + ${gSibs.length ? gSibs.join(' + ') : 'Siblings'}`);
-    if(isOn('c_g_sibs'))          groomItems.push(`Couple + ${gSibs.length ? gSibs.join(' + ') : "Groom’s Siblings"}`);
-
-    if(isOn('g_immediate')){
-      const parts=['Groom',(gDad||'Dad'),(gMom||'Mom')]; if(gSibs.length) parts.push(...gSibs);
-      groomItems.push(parts.join(' + '));
-    }
-    if(isOn('c_g_immediate')){
-      const arr=['Couple']; if(gDad||gMom) arr.push(gDad||"Groom’s Dad", gMom||"Groom’s Mom"); if(gSibs.length) arr.push(...gSibs);
-      groomItems.push(arr.join(' + '));
-    }
-    if(groomItems.length) sections.push({title:"Groom’s Family",items:groomItems});
-
-    // Combined / Couple + (general)
-    const combined=[];
-
-    if(isOn('both_parents'))   combined.push('Couple + Both Sets of Parents');
-
+    if(isOn('both_parents')) combined.push('Couple + Both Sets of Parents');
     if(isOn('both_immediate')){
       const names=['Couple'];
-      if(bDad||bMom) names.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom");
-      if(gDad||gMom) names.push(gDad||"Groom’s Dad", gMom||"Groom’s Mom");
+      if(bDad||bMom) names.push(bDad||role1s+' Dad', bMom||role1s+' Mom');
+      if(gDad||gMom) names.push(gDad||role2s+' Dad', gMom||role2s+' Mom');
       if(bSibs.length) names.push(...bSibs);
       if(gSibs.length) names.push(...gSibs);
       combined.push(names.join(' + '));
     }
 
-    // Names-aware groups
-    const joinOrLabel = (label, arr)=> arr.length ? `Couple + ${arr.join(' + ')}` : `Couple + ${label}`;
+    if(isOn('grandparents_b')) combined.push(joinOr(`${role1s} Grandparents`, gpB));
+    if(isOn('grandparents_g')) combined.push(joinOr(`${role2s} Grandparents`, gpG));
+    if(isOn('nieces_nephews')) combined.push(joinOr('Nieces/Nephews', niecesNephews));
+    if(isOn('extended'))       combined.push('Couple + Extended Family');
+    if(isOn('couple_aunts_uncles')) combined.push(joinOr('Aunts/Uncles', auntsUncles));
+    if(isOn('couple_cousins'))       combined.push(joinOr('Cousins', cousins));
+    if(isOn('couple_godparents'))    combined.push(joinOr('Godparents', godparents));
+    if(isOn('couple_friends'))       combined.push(joinOr('Close Friends', friends));
 
-    if(isOn('grandparents'))    combined.push(joinOrLabel('Grandparents', [...gpB, ...gpG]));
-    if(isOn('nieces_nephews'))  combined.push(joinOrLabel('Nieces/Nephews', niecesNephews));
-    if(isOn('extended'))        combined.push('Couple + Extended Family'); // too broad for names usually
-    if(isOn('couple_aunts_uncles')) combined.push(joinOrLabel('Aunts/Uncles', auntsUncles));
-    if(isOn('couple_cousins'))       combined.push(joinOrLabel('Cousins', cousins));
-    if(isOn('couple_godparents'))    combined.push(joinOrLabel('Godparents', godparents));
-    if(isOn('couple_friends'))       combined.push(joinOrLabel('Close Friends', friends));
+    if(combined.length) sections.push({title:"Combined Groups", items: combined});
 
-    if(combined.length) sections.push({title:"Combined Groups",items:combined});
-
-    // Wedding party
+    // Party
     const party=[];
     if(isOn('wp_all'))         party.push('Couple + Entire Wedding Party');
-    if(isOn('wp_bridesmaids')) party.push('Bride + Bridesmaids');
-    if(isOn('wp_groomsmen'))   party.push('Groom + Groomsmen');
+    if(isOn('wp_bridesmaids')) party.push(`${role1} + Bridesmaids`);
+    if(isOn('wp_groomsmen'))   party.push(`${role2} + Groomsmen`);
     if(isOn('wp_individuals')) party.push('Individuals with each bridesmaid/groomsman');
     if(isOn('wp_fg_rb'))       party.push('Couple + Flower Girls / Ring Bearers');
     if(party.length) sections.push({title:"Wedding Party",items:party});
 
-    // Custom & special
-    const adds=(val('customAdds')).split(/\n+/).map(s=>s.trim()).filter(Boolean);
-    if(adds.length) sections.push({title:'Custom Adds',items:adds});
-    const special=val('special');
-    if(special) sections.push({title:'Special Requests',items:[special]});
+    // Custom / Special
+    const adds = (val('customAdds')).split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    if(adds.length) sections.push({title:'Custom Adds', items: adds});
+    const special = val('special');
+    if(special) sections.push({title:'Special Requests', items:[special]});
 
     // Render
-    const container=el('rlList'); container.innerHTML='';
-    const meta=document.createElement('div');
-    meta.className='rl-item';
-    meta.innerHTML=`<div><strong>Couple:</strong> ${bride} + ${groom}${wDate?` &nbsp;&nbsp; <strong>Date:</strong> ${wDate}`:''}</div><div class="hint">This is a starting outline. Samantha will review and refine before wedding day.</div>`;
+    const container=el('rlList'); container.innerHTML = '';
+    const meta=document.createElement('div'); meta.className='rl-item';
+    meta.innerHTML = `<div><strong>Couple:</strong> ${p1} + ${p2}${wDate?` &nbsp;&nbsp; <strong>Date:</strong> ${wDate}`:''}</div><div class="hint">This is a starting outline. Samantha will review and refine before wedding day.</div>`;
     container.appendChild(meta);
 
-    let count=1;
+    let n=1;
+    const seen = new Set();
     sections.forEach(sec=>{
       const s=document.createElement('div'); s.className='rl-section'; s.textContent=sec.title; container.appendChild(s);
       sec.items.forEach(it=>{
-        const li=document.createElement('div'); li.className='rl-item'; li.textContent=`${count}. ${it}`; count++; container.appendChild(li);
+        if(seen.has(it)) return; // de-dupe exact duplicates
+        seen.add(it);
+        const row=document.createElement('div'); row.className='rl-item'; row.textContent = `${n}. ${it}`; n++; container.appendChild(row);
       });
     });
 
-    el('results').hidden=false;
+    el('results').hidden = false;
+    // Scroll to results
+    el('results').scrollIntoView({behavior:'smooth', block:'start'});
   }
 
   function downloadPDF(){
     const { jsPDF } = window.jspdf;
     const pdf=new jsPDF({orientation:'portrait',unit:'pt',format:'letter'});
     const brand='#9a633e';
-    const bride=val('bride')||'Bride';
-    const groom=val('groom')||'Groom';
-    const wDate=val('wDate');
+    const p1 = val('bride') || (roles[roleMode].r1);
+    const p2 = val('groom') || (roles[roleMode].r2);
+    const wDate = val('wDate');
 
     pdf.setFont('helvetica','bold'); pdf.setFontSize(18); pdf.setTextColor(brand);
     pdf.text('Rule Creative Co. – Wedding Day Shot List',40,60);
@@ -364,7 +506,7 @@ button.alt{background:#fff;color:var(--brand)}
     let y=80; lines.forEach(l=>{ pdf.text(l,40,y); y+=14; });
     y+=6; pdf.setDrawColor(brand); pdf.line(40,y,560,y); y+=22;
     pdf.setFont('helvetica','normal'); pdf.setFontSize(11); pdf.setTextColor('#000');
-    pdf.text(`Couple: ${bride} + ${groom}${wDate?`   Date: ${wDate}`:''}`,40,y); y+=22;
+    pdf.text(`Couple: ${p1} + ${p2}${wDate?`   Date: ${wDate}`:''}`,40,y); y+=22;
 
     if(document.querySelector('#rlList').children.length===0) buildList();
     const addPageIfNeeded=()=>{ if(y>740){ pdf.addPage(); y=60; } };
@@ -388,23 +530,34 @@ button.alt{background:#fff;color:var(--brand)}
 
   function sendToSamantha(){
     const email=val('email');
-    const bride=val('bride')||'Bride';
-    const groom=val('groom')||'Groom';
+    const p1 = val('bride') || (roles[roleMode].r1);
+    const p2 = val('groom') || (roles[roleMode].r2);
     const wDate=val('wDate');
     if(el('results').hidden) buildList();
 
-    let body=`Couple: ${bride} + ${groom}%0D%0A`;
+    let body=`Couple: ${p1} + ${p2}%0D%0A`;
     if(wDate) body+=`Date: ${wDate}%0D%0A`;
     if(email) body+=`Reply-to: ${email}%0D%0A`;
     body+=`%0D%0AShot List:%0D%0A`;
     document.querySelectorAll('#rlList > *').forEach(n=>{
       body+=`- ${encodeURIComponent(n.textContent.trim())}%0D%0A`;
     });
-    const subject=encodeURIComponent(`Shot List – ${bride} + ${groom}${wDate?` (${wDate})`:''}`);
+    const subject=encodeURIComponent(`Shot List – ${p1} + ${p2}${wDate?` (${wDate})`:''}`);
     window.location.href=`mailto:hello@rulecreativeco.com?subject=${subject}&body=${body}`;
   }
 
+  // Wire up
   document.addEventListener('DOMContentLoaded', ()=>{
+    // role mode switch
+    el('roleMode').addEventListener('change', (e)=>{ roleMode = e.target.value; applyRoleLabels(); });
+    applyRoleLabels();
+    wireEdgeToggles();
+    applyDefaultsOnce();
+
+    // show/hide edge groups initially
+    el('b_edge_wrap').hidden = !el('b_edge_toggle').checked;
+    el('g_edge_wrap').hidden = !el('g_edge_toggle').checked;
+
     el('gen').onclick = buildList;
     el('pdf').onclick = downloadPDF;
     el('send').onclick = sendToSamantha;
