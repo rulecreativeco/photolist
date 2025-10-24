@@ -205,7 +205,7 @@ button.alt{background:#fff;color:var(--brand)}
     const bSibs=(el('b_siblings_names').value||'').split(',').map(s=>s.trim()).filter(Boolean);
     const gSibs=(el('g_siblings_names').value||'').split(',').map(s=>s.trim()).filter(Boolean);
 
-    const sections=[], brideItems=[], groomItems=[], combined=[], party=[];
+    const sections=[], brideItems=[], groomItems=[], party=[];
 
     // Bride’s Family
     if(el('b_parents_together').checked) brideItems.push(`Bride + ${bDad||'Dad'} + ${bMom||'Mom'}`);
@@ -213,7 +213,7 @@ button.alt{background:#fff;color:var(--brand)}
     if(el('b_with_dad').checked)        brideItems.push(`Bride + ${bDad||'Dad'}`);
     if(el('b_siblings').checked)        brideItems.push(`Bride + ${bSibs.length ? bSibs.join(' + ') : 'Siblings'}`);
     if(el('b_immediate').checked){
-      const p=['Bride', (bDad||'Dad'), (bMom||'Mom')]; if(bSibs.length) p.push(...bSibs);
+      const p=['Bride',(bDad||'Dad'),(bMom||'Mom')]; if(bSibs.length) p.push(...bSibs);
       brideItems.push(p.join(' + '));
     }
     if(brideItems.length) sections.push({title:"Bride’s Family",items:brideItems});
@@ -224,58 +224,72 @@ button.alt{background:#fff;color:var(--brand)}
     if(el('g_with_dad').checked)         groomItems.push(`Groom + ${gDad||'Dad'}`);
     if(el('g_siblings').checked)         groomItems.push(`Groom + ${gSibs.length ? gSibs.join(' + ') : 'Siblings'}`);
     if(el('g_immediate').checked){
-      const p=['Groom', (gDad||'Dad'), (gMom||'Mom')]; if(gSibs.length) p.push(...gSibs);
+      const p=['Groom',(gDad||'Dad'),(gMom||'Mom')]; if(gSibs.length) p.push(...gSibs);
       groomItems.push(p.join(' + '));
     }
     if(groomItems.length) sections.push({title:"Groom’s Family",items:groomItems});
 
-    // Couple + (general)
-    if(el('both_parents').checked)   combined.push('Couple + Both Sets of Parents');
-    if(el('both_immediate').checked){
-      const names=['Couple'];
-      if(bDad||bMom) names.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom");
-      if(gDad||gMom) names.push(gDad||"Groom’s Dad", gMom||"Groom’s Mom");
-      if(bSibs.length) names.push(...bSibs);
-      if(gSibs.length) names.push(...gSibs);
+    // Combined / Couple +
+    const combined = [];
+    const isOn = (id) => {
+      const n = document.getElementById(id);
+      return !!(n && n.checked);
+    };
+
+    // General couple-wide groups
+    if (isOn('both_parents')) {
+      combined.push('Couple + Both Sets of Parents');
+    }
+    if (isOn('both_immediate')) {
+      const names = ['Couple'];
+      if (bDad || bMom) names.push(bDad || "Bride’s Dad", bMom || "Bride’s Mom");
+      if (gDad || gMom) names.push(gDad || "Groom’s Dad", gMom || "Groom’s Mom");
+      if (bSibs.length) names.push(...bSibs);
+      if (gSibs.length) names.push(...gSibs);
       combined.push(names.join(' + '));
     }
-    if(el('grandparents').checked)   combined.push('Couple + Grandparents');
-    if(el('nieces_nephews').checked) combined.push('Couple + Nieces/Nephews');
-    if(el('extended').checked)       combined.push('Couple + Extended Family');
-    if(el('couple_aunts_uncles').checked) combined.push('Couple + Aunts/Uncles');
-    if(el('couple_cousins').checked)      combined.push('Couple + Cousins');
-    if(el('couple_godparents').checked)   combined.push('Couple + Godparents');
-    if(el('couple_friends').checked)      combined.push('Couple + Close Friends');
+    if (isOn('grandparents'))    combined.push('Couple + Grandparents');
+    if (isOn('nieces_nephews'))  combined.push('Couple + Nieces/Nephews');
+    if (isOn('extended'))        combined.push('Couple + Extended Family');
+    if (isOn('couple_aunts_uncles')) combined.push('Couple + Aunts/Uncles');
+    if (isOn('couple_cousins'))       combined.push('Couple + Cousins');
+    if (isOn('couple_godparents'))    combined.push('Couple + Godparents');
+    if (isOn('couple_friends'))       combined.push('Couple + Close Friends');
 
     // Couple + Bride’s side
-    if(el('c_b_parents').checked)    combined.push(`Couple + ${bDad||"Bride’s Dad"} + ${bMom||"Bride’s Mom"}`);
-    if(el('c_b_mom').checked)        combined.push(`Couple + ${bMom||"Bride’s Mom"}`);
-    if(el('c_b_dad').checked)        combined.push(`Couple + ${bDad||"Bride’s Dad"}`);
-    if(el('c_b_sibs').checked)       combined.push(`Couple + ${bSibs.length ? bSibs.join(' + ') : "Bride’s Siblings"}`);
-    if(el('c_b_immediate').checked){
-      const a=['Couple']; if(bDad||bMom) a.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom");
-      if(bSibs.length) a.push(...bSibs); combined.push(a.join(' + '));
+    if (isOn('c_b_parents'))    combined.push(`Couple + ${bDad || "Bride’s Dad"} + ${bMom || "Bride’s Mom"}`);
+    if (isOn('c_b_mom'))        combined.push(`Couple + ${bMom || "Bride’s Mom"}`);
+    if (isOn('c_b_dad'))        combined.push(`Couple + ${bDad || "Bride’s Dad"}`);
+    if (isOn('c_b_sibs'))       combined.push(`Couple + ${bSibs.length ? bSibs.join(' + ') : "Bride’s Siblings"}`);
+    if (isOn('c_b_immediate')) {
+      const arr = ['Couple'];
+      if (bDad || bMom) arr.push(bDad || "Bride’s Dad", bMom || "Bride’s Mom");
+      if (bSibs.length) arr.push(...bSibs);
+      combined.push(arr.join(' + '));
     }
 
     // Couple + Groom’s side
-    if(el('c_g_parents').checked)    combined.push(`Couple + ${gDad||"Groom’s Dad"} + ${gMom||"Groom’s Mom"}`);
-    if(el('c_g_mom').checked)        combined.push(`Couple + ${gMom||"Groom’s Mom"}`);
-    if(el('c_g_dad').checked)        combined.push(`Couple + ${gDad||"Groom’s Dad"}`);
-    if(el('c_g_sibs').checked)       combined.push(`Couple + ${gSibs.length ? gSibs.join(' + ') : "Groom’s Siblings"}`);
-    if(el('c_g_immediate').checked){
-      const a=['Couple']; if(gDad||gMom) a.push(gDad||"Groom’s Dad", gMom||"Groom’s Mom");
-      if(gSibs.length) a.push(...gSibs); combined.push(a.join(' + '));
+    if (isOn('c_g_parents'))    combined.push(`Couple + ${gDad || "Groom’s Dad"} + ${gMom || "Groom’s Mom"}`);
+    if (isOn('c_g_mom'))        combined.push(`Couple + ${gMom || "Groom’s Mom"}`);
+    if (isOn('c_g_dad'))        combined.push(`Couple + ${gDad || "Groom’s Dad"}`);
+    if (isOn('c_g_sibs'))       combined.push(`Couple + ${gSibs.length ? gSibs.join(' + ') : "Groom’s Siblings"}`);
+    if (isOn('c_g_immediate')) {
+      const arr = ['Couple'];
+      if (gDad || gMom) arr.push(gDad || "Groom’s Dad", gMom || "Groom’s Mom");
+      if (gSibs.length) arr.push(...gSibs);
+      combined.push(arr.join(' + '));
     }
 
-    if(combined.length) sections.push({title:"Combined Groups",items:combined});
+    if (combined.length) sections.push({ title: "Combined Groups", items: combined });
 
     // Wedding party
-    if(el('wp_all').checked)         party.push('Couple + Entire Wedding Party');
-    if(el('wp_bridesmaids').checked) party.push('Bride + Bridesmaids');
-    if(el('wp_groomsmen').checked)   party.push('Groom + Groomsmen');
-    if(el('wp_individuals').checked) party.push('Individuals with each bridesmaid/groomsman');
-    if(el('wp_fg_rb').checked)       party.push('Couple + Flower Girls / Ring Bearers');
-    if(party.length) sections.push({title:"Wedding Party",items:party});
+    const partyArr=[];
+    if(el('wp_all').checked)         partyArr.push('Couple + Entire Wedding Party');
+    if(el('wp_bridesmaids').checked) partyArr.push('Bride + Bridesmaids');
+    if(el('wp_groomsmen').checked)   partyArr.push('Groom + Groomsmen');
+    if(el('wp_individuals').checked) partyArr.push('Individuals with each bridesmaid/groomsman');
+    if(el('wp_fg_rb').checked)       partyArr.push('Couple + Flower Girls / Ring Bearers');
+    if(partyArr.length) sections.push({title:"Wedding Party",items:partyArr});
 
     // Custom & special
     const adds=(el('customAdds').value||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
