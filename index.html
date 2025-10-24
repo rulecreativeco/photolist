@@ -14,7 +14,7 @@
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:var(--font-body);background:#fff;color:var(--fg);}
-    .wrap{max-width:920px;margin:28px auto;padding:0 18px 64px}
+    .wrap{max-width:920px;margin:28px auto;padding:0 24px 64px}
     header.hero{text-align:center;padding:28px 18px;border-radius:28px}
     h1{font-family:var(--font-accent);font-weight:600;font-size:clamp(1.6rem,3vw,2.4rem);margin:0}
     .sub{color:var(--muted);margin:8px auto;font-size:1rem;max-width:820px}
@@ -29,34 +29,33 @@
     button.alt{background:#fff;color:var(--brand)}
     .hint{color:var(--muted);font-size:.9rem}
 
+    /* spacing around each group/section */
+    .group{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:20px 0}
+
     /* 3 clean columns with breathing room */
     .grid-3{
       display:grid;
-      grid-template-columns:repeat(3, minmax(280px, 1fr));
-      gap:16px 18px;               /* row x column gap */
+      grid-template-columns:repeat(3, minmax(290px, 1fr));
+      gap:16px 18px;
       align-items:start;
     }
-    .grid-3 > div{min-width:0; padding-right:8px;}
+    .grid-3 > div{min-width:0; padding-right:10px}
 
-    /* Checkbox rows: box | text */
+    /* checkbox rows: box | text */
     .check{
       display:grid;
-      grid-template-columns: 18px 1fr;
+      grid-template-columns:18px 1fr;
       align-items:start;
       gap:10px;
       margin:8px 0;
       line-height:1.5;
-      white-space:normal;
       word-break:break-word;
     }
     .check input{margin-top:2px}
 
-    /* Mobile fallbacks */
-    @media (max-width:900px){ .grid-3{grid-template-columns:repeat(2, minmax(260px,1fr));} }
-    @media (max-width:640px){ .grid-3{grid-template-columns:1fr;} }
-
-    .group{border:1px solid var(--line);border-radius:16px;padding:14px}
-    .group h3{margin:0 0 8px 0;font-family:var(--font-accent);font-weight:700;font-size:1.1rem;color:#111}
+    /* mobile fallbacks */
+    @media (max-width:900px){ .grid-3{grid-template-columns:repeat(2, minmax(260px,1fr))} }
+    @media (max-width:640px){ .grid-3{grid-template-columns:1fr} }
 
     .results{border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);margin-top:18px}
     .rl-item{display:grid;grid-template-columns:1fr;gap:8px;padding:12px 18px;border-top:1px dashed var(--line);background:#fff}
@@ -84,7 +83,6 @@
 
     <div class="group">
       <h3>Family names</h3>
-      <p class="hint">Add names so items read like “Bride + Tom + Nancy.”</p>
       <div class="grid-3">
         <div>
           <label>Bride’s dad</label><input type="text" id="b_dad" placeholder="e.g., Tom">
@@ -96,34 +94,59 @@
           <label>Groom’s mom</label><input type="text" id="g_mom" placeholder="e.g., Susan">
           <label>Groom’s siblings (comma-separated)</label><input type="text" id="g_siblings_names" placeholder="e.g., Jake, Ava">
         </div>
-        <div><div class="hint" style="margin-top:28px">Leave blanks if unknown — we’ll fall back to “Mom,” “Dad,” or “Siblings.”</div></div>
       </div>
     </div>
 
     <div class="group">
       <h3>Family combinations</h3>
+
+      <!-- headings row -->
+      <div class="grid-3" style="margin-bottom:6px">
+        <div><strong>Bride’s Side</strong></div>
+        <div><strong>Groom’s Side</strong></div>
+        <div><strong>Couple</strong></div>
+      </div>
+
       <div class="grid-3">
+        <!-- Bride’s Side -->
         <div>
           <label class="check"><input type="checkbox" id="b_parents_together">Bride + Parents together</label>
           <label class="check"><input type="checkbox" id="b_with_mom">Bride + Mom</label>
           <label class="check"><input type="checkbox" id="b_with_dad">Bride + Dad</label>
           <label class="check"><input type="checkbox" id="b_siblings">Bride + Siblings</label>
           <label class="check"><input type="checkbox" id="b_immediate">Bride + Immediate Family</label>
+
+          <!-- Couple + Bride’s family -->
+          <label class="check"><input type="checkbox" id="c_b_parents">Couple + Bride’s Parents together</label>
+          <label class="check"><input type="checkbox" id="c_b_mom">Couple + Bride’s Mom</label>
+          <label class="check"><input type="checkbox" id="c_b_dad">Couple + Bride’s Dad</label>
+          <label class="check"><input type="checkbox" id="c_b_sibs">Couple + Bride’s Siblings</label>
+          <label class="check"><input type="checkbox" id="c_b_immediate">Couple + Bride’s Immediate Family</label>
         </div>
+
+        <!-- Groom’s Side -->
         <div>
           <label class="check"><input type="checkbox" id="g_parents_together">Groom + Parents together</label>
           <label class="check"><input type="checkbox" id="g_with_mom">Groom + Mom</label>
           <label class="check"><input type="checkbox" id="g_with_dad">Groom + Dad</label>
           <label class="check"><input type="checkbox" id="g_siblings">Groom + Siblings</label>
           <label class="check"><input type="checkbox" id="g_immediate">Groom + Immediate Family</label>
+
+          <!-- Couple + Groom’s family -->
+          <label class="check"><input type="checkbox" id="c_g_parents">Couple + Groom’s Parents together</label>
+          <label class="check"><input type="checkbox" id="c_g_mom">Couple + Groom’s Mom</label>
+          <label class="check"><input type="checkbox" id="c_g_dad">Couple + Groom’s Dad</label>
+          <label class="check"><input type="checkbox" id="c_g_sibs">Couple + Groom’s Siblings</label>
+          <label class="check"><input type="checkbox" id="c_g_immediate">Couple + Groom’s Immediate Family</label>
         </div>
+
+        <!-- Couple (general) -->
         <div>
           <label class="check"><input type="checkbox" id="both_parents">Couple + Both Sets of Parents</label>
           <label class="check"><input type="checkbox" id="both_immediate">Couple + Both Immediate Families</label>
           <label class="check"><input type="checkbox" id="grandparents">Couple + Grandparents</label>
           <label class="check"><input type="checkbox" id="nieces_nephews">Couple + Nieces/Nephews</label>
           <label class="check"><input type="checkbox" id="extended">Couple + Extended Family</label>
-          <!-- new Couple+ options -->
           <label class="check"><input type="checkbox" id="couple_gparents">Couple + Both Grandparents</label>
           <label class="check"><input type="checkbox" id="couple_aunts_uncles">Couple + Aunts/Uncles</label>
           <label class="check"><input type="checkbox" id="couple_cousins">Couple + Cousins</label>
@@ -131,6 +154,7 @@
           <label class="check"><input type="checkbox" id="couple_friends">Couple + Close Friends</label>
         </div>
       </div>
+
       <label style="margin-top:10px">Custom adds (one per line)</label>
       <textarea id="customAdds" placeholder="Bride + College friends&#10;Groom + Godparents"></textarea>
     </div>
@@ -139,13 +163,13 @@
       <h3>Bridal party</h3>
       <div class="grid-3">
         <div>
-          <label class="check"><input type="checkbox" id="wp_all">Couple + Entire wedding party</label>
+          <label class="check"><input type="checkbox" id="wp_all">Couple + Entire Wedding Party</label>
           <label class="check"><input type="checkbox" id="wp_bridesmaids">Bride + Bridesmaids</label>
           <label class="check"><input type="checkbox" id="wp_groomsmen">Groom + Groomsmen</label>
         </div>
         <div>
           <label class="check"><input type="checkbox" id="wp_individuals">Individuals with each bridesmaid/groomsman</label>
-          <label class="check"><input type="checkbox" id="wp_fg_rb">Couple + Flower girls / Ring bearers</label>
+          <label class="check"><input type="checkbox" id="wp_fg_rb">Couple + Flower Girls / Ring Bearers</label>
         </div>
       </div>
       <label>Special requests (optional)</label>
@@ -173,7 +197,7 @@
   function buildList(){
     const bride=el('bride').value.trim()||'Bride';
     const groom=el('groom').value.trim()||'Groom';
-    const wDate = el('wDate').value || '';
+    const wDate=el('wDate').value||'';
 
     // Names
     const bDad=(el('b_dad').value||'').trim();
@@ -185,51 +209,73 @@
 
     const sections=[];
 
-    // Bride’s Family (always prefix “Bride +”)
+    // Bride’s Family
     const brideItems=[];
     if(el('b_with_mom').checked) brideItems.push(`Bride + ${bMom || 'Mom'}`);
     if(el('b_with_dad').checked) brideItems.push(`Bride + ${bDad || 'Dad'}`);
     if(el('b_parents_together').checked) brideItems.push(`Bride + ${bDad || 'Dad'} + ${bMom || 'Mom'}`);
     if(el('b_siblings').checked) brideItems.push(`Bride + ${bSibs.length ? bSibs.join(' + ') : 'Siblings'}`);
     if(el('b_immediate').checked){
-      const parts = ['Bride', (bDad||'Dad'), (bMom||'Mom')];
+      const parts=['Bride', (bDad||'Dad'), (bMom||'Mom')];
       if(bSibs.length) parts.push(...bSibs);
       brideItems.push(parts.join(' + '));
     }
     if(brideItems.length) sections.push({title:"Bride’s Family", items:brideItems});
 
-    // Groom’s Family (always prefix “Groom +”)
+    // Groom’s Family
     const groomItems=[];
     if(el('g_with_mom').checked) groomItems.push(`Groom + ${gMom || 'Mom'}`);
     if(el('g_with_dad').checked) groomItems.push(`Groom + ${gDad || 'Dad'}`);
     if(el('g_parents_together').checked) groomItems.push(`Groom + ${gDad || 'Dad'} + ${gMom || 'Mom'}`);
     if(el('g_siblings').checked) groomItems.push(`Groom + ${gSibs.length ? gSibs.join(' + ') : 'Siblings'}`);
     if(el('g_immediate').checked){
-      const parts = ['Groom', (gDad||'Dad'), (gMom||'Mom')];
+      const parts=['Groom', (gDad||'Dad'), (gMom||'Mom')];
       if(gSibs.length) parts.push(...gSibs);
       groomItems.push(parts.join(' + '));
     }
     if(groomItems.length) sections.push({title:"Groom’s Family", items:groomItems});
 
-    // Combined / Couple + groups
+    // Combined / Couple +
     const combined=[];
     if(el('both_parents').checked) combined.push('Couple + Both Sets of Parents');
+
+    // FIXED: Both Immediate Families (plain names only)
     if(el('both_immediate').checked){
-      const people = ['Couple'];
-      people.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom", gDad||"Groom’s Dad", gMom||"Groom’s Mom");
-      if(bSibs.length) people.push(...bSibs.map(n=>`Bride’s sibling ${n}`));
-      if(gSibs.length) people.push(...gSibs.map(n=>`Groom’s sibling ${n}`));
-      combined.push(people.join(' + '));
+      const names=['Couple'];
+      if(bDad||bMom) names.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom");
+      if(gDad||gMom) names.push(gDad||"Groom’s Dad", gMom||"Groom’s Mom");
+      if(bSibs.length) names.push(...bSibs);
+      if(gSibs.length) names.push(...gSibs);
+      combined.push(names.join(' + '));
     }
+
     if(el('grandparents').checked) combined.push('Couple + Grandparents');
     if(el('nieces_nephews').checked) combined.push('Couple + Nieces/Nephews');
     if(el('extended').checked) combined.push('Couple + Extended Family');
-    // New Couple+ options
-    if(el('couple_gparents').checked) combined.push('Couple + Both Grandparents');
-    if(el('couple_aunts_uncles').checked) combined.push('Couple + Aunts + Uncles');
-    if(el('couple_cousins').checked) combined.push('Couple + Cousins');
-    if(el('couple_godparents').checked) combined.push('Couple + Godparents');
-    if(el('couple_friends').checked) combined.push('Couple + Close Friends');
+
+    // Couple + Bride’s side
+    if(el('c_b_parents').checked) combined.push(`Couple + ${(bDad||"Bride’s Dad")} + ${(bMom||"Bride’s Mom")}`);
+    if(el('c_b_mom').checked) combined.push(`Couple + ${(bMom||"Bride’s Mom")}`);
+    if(el('c_b_dad').checked) combined.push(`Couple + ${(bDad||"Bride’s Dad")}`);
+    if(el('c_b_sibs').checked) combined.push(`Couple + ${bSibs.length ? bSibs.join(' + ') : "Bride’s Siblings"}`);
+    if(el('c_b_immediate').checked){
+      const arr=['Couple'];
+      if(bDad||bMom) arr.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom");
+      if(bSibs.length) arr.push(...bSibs);
+      combined.push(arr.join(' + '));
+    }
+
+    // Couple + Groom’s side
+    if(el('c_g_parents').checked) combined.push(`Couple + ${(gDad||"Groom’s Dad")} + ${(gMom||"Groom’s Mom")}`);
+    if(el('c_g_mom').checked) combined.push(`Couple + ${(gMom||"Groom’s Mom")}`);
+    if(el('c_g_dad').checked) combined.push(`Couple + ${(gDad||"Groom’s Dad")}`);
+    if(el('c_g_sibs').checked) combined.push(`Couple + ${gSibs.length ? gSibs.join(' + ') : "Groom’s Siblings"}`);
+    if(el('c_g_immediate').checked){
+      const arr=['Couple'];
+      if(gDad||gMom) arr.push(gDad||"Groom’s Dad", gMom||"Groom’s Mom");
+      if(gSibs.length) arr.push(...gSibs);
+      combined.push(arr.join(' + '));
+    }
 
     if(combined.length) sections.push({title:"Combined Groups", items:combined});
 
@@ -243,14 +289,14 @@
     if(party.length) sections.push({title:"Wedding Party", items:party});
 
     // Custom adds
-    const addsRaw = (el('customAdds').value||'').trim();
+    const addsRaw=(el('customAdds').value||'').trim();
     if(addsRaw){
-      const adds = addsRaw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+      const adds=addsRaw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
       if(adds.length) sections.push({title:'Custom Adds', items:adds});
     }
 
     // Special requests
-    const special = (el('special').value||'').trim();
+    const special=(el('special').value||'').trim();
     if(special){ sections.push({title:'Special Requests', items:[special]}); }
 
     // Render
@@ -272,8 +318,9 @@
     el('results').hidden=false;
   }
 
-  // Quick PDF + “send” wiring (kept simple)
-  function downloadPDF(){ const { jsPDF } = window.jspdf;
+  // PDF (simple, branded)
+  function downloadPDF(){
+    const { jsPDF } = window.jspdf;
     const pdf=new jsPDF({orientation:'portrait',unit:'pt',format:'letter'});
     const brand='#9a633e';
     const bride=el('bride').value.trim()||'Bride';
