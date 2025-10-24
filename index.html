@@ -1,378 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wedding Day Shot List Generator – Rule Creative Co.</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-  <style>
-    :root{
-      --bg:#ffffff; --fg:#1b1b1b; --muted:#6b7280; --brand:#9a633e; --card:#ffffff; --line:#e5e7eb;
-      --radius:18px; --pad:16px; --font-body:'Montserrat', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      --font-accent:'Georgia', serif; --shadow:0 10px 18px rgba(2,12,27,.04), 0 2px 6px rgba(2,12,27,.06);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:var(--font-body);background:#fff;color:var(--fg);}
-    .wrap{max-width:920px;margin:28px auto;padding:0 24px 64px}
-    header.hero{text-align:center;padding:28px 18px;border-radius:28px}
-    h1{font-family:var(--font-accent);font-weight:600;font-size:clamp(1.6rem,3vw,2.4rem);margin:0}
-    .sub{color:var(--muted);margin:8px auto;font-size:1rem;max-width:820px}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wedding Day Shot List Generator – Rule Creative Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<style>
+:root {
+  --bg:#ffffff; --fg:#1b1b1b; --muted:#6b7280; --brand:#9a633e;
+  --line:#e5e7eb; --radius:18px; --pad:16px;
+  --font-body:'Montserrat', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  --font-accent:'Georgia', serif; --shadow:0 10px 18px rgba(2,12,27,.04),0 2px 6px rgba(2,12,27,.06);
+}
+body{margin:0;font-family:var(--font-body);background:#fff;color:var(--fg);}
+.wrap{max-width:940px;margin:28px auto;padding:0 28px 64px}
+header.hero{text-align:center;padding:28px 18px}
+h1{font-family:var(--font-accent);font-weight:600;font-size:clamp(1.6rem,3vw,2.4rem);margin:0}
+.sub{color:var(--muted);margin:8px auto;font-size:1rem;max-width:820px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:var(--pad);box-shadow:var(--shadow);margin-top:16px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-size:.9rem;margin:8px 0 6px;color:#111;font-weight:700}
+input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff}
+textarea{min-height:90px;resize:vertical}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;justify-content:center}
+button{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer}
+button.alt{background:#fff;color:var(--brand)}
+.hint{color:var(--muted);font-size:.9rem}
 
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:var(--pad);box-shadow:var(--shadow);margin-top:16px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    label{display:block;font-size:.9rem;margin:8px 0 6px;color:#111827;font-weight:700}
-    input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff}
-    textarea{min-height:90px;resize:vertical}
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;justify-content:center}
-    button{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer}
-    button.alt{background:#fff;color:var(--brand)}
-    .hint{color:var(--muted);font-size:.9rem}
+/* group sections */
+.group{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:22px 0}
 
-    /* spacing around each group/section */
-    .group{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:20px 0}
+/* responsive grid fix */
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px 24px;
+  align-items:start;
+}
+.grid-3>div{min-width:0;padding-right:10px}
 
-    /* 3 clean columns with breathing room */
-    .grid-3{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(290px, 1fr));
-      gap:16px 18px;
-      align-items:start;
-    }
-    .grid-3 > div{min-width:0; padding-right:10px}
+/* checkbox rows */
+.check{display:grid;grid-template-columns:18px 1fr;align-items:start;gap:10px;margin:6px 0;line-height:1.5}
+.check input{margin-top:2px}
 
-    /* checkbox rows: box | text */
-    .check{
-      display:grid;
-      grid-template-columns:18px 1fr;
-      align-items:start;
-      gap:10px;
-      margin:8px 0;
-      line-height:1.5;
-      word-break:break-word;
-    }
-    .check input{margin-top:2px}
+@media(max-width:900px){.grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.grid-3{grid-template-columns:1fr}}
 
-    /* mobile fallbacks */
-    @media (max-width:900px){ .grid-3{grid-template-columns:repeat(2, minmax(260px,1fr))} }
-    @media (max-width:640px){ .grid-3{grid-template-columns:1fr} }
-
-    .results{border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);margin-top:18px}
-    .rl-item{display:grid;grid-template-columns:1fr;gap:8px;padding:12px 18px;border-top:1px dashed var(--line);background:#fff}
-    .rl-item:nth-child(even){background:#fffaf7}
-    .rl-section{background:#fbf7f4;border-top:1px solid #f0e6df;font-weight:800;font-family:var(--font-accent);padding:14px 18px}
-  </style>
+.results{border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);margin-top:18px}
+.rl-item{padding:12px 18px;border-top:1px dashed var(--line);background:#fff}
+.rl-item:nth-child(even){background:#fffaf7}
+.rl-section{background:#fbf7f4;border-top:1px solid #f0e6df;font-weight:800;font-family:var(--font-accent);padding:14px 18px}
+</style>
 </head>
 <body>
 <div class="wrap">
-  <header class="hero">
-    <h1>Wedding Day Shot List Builder</h1>
-    <p class="sub"><strong>Use this as a smart starting point.</strong> We’ll review and refine your family photo list together to fit your people and your day.</p>
-  </header>
+<header class="hero">
+  <h1>Wedding Day Shot List Builder</h1>
+  <p class="sub"><strong>Use this as a smart starting point.</strong> We’ll review and refine your family photo list together to fit your people and your day.</p>
+</header>
 
-  <!-- FORM -->
-  <div class="card" id="form">
-    <div class="row">
-      <div><label>Bride’s first name</label><input type="text" id="bride" placeholder="e.g., Emma"></div>
-      <div><label>Groom’s first name</label><input type="text" id="groom" placeholder="e.g., Noah"></div>
-    </div>
-    <div class="row">
-      <div><label>Wedding date</label><input type="date" id="wDate"></div>
-      <div><label>Your email (so Samantha can reply)</label><input type="email" id="email" placeholder="you@example.com"></div>
-    </div>
+<div class="card">
+  <div class="row">
+    <div><label>Bride’s first name</label><input id="bride" placeholder="e.g., Emma" /></div>
+    <div><label>Groom’s first name</label><input id="groom" placeholder="e.g., Noah" /></div>
+  </div>
+  <div class="row">
+    <div><label>Wedding date</label><input type="date" id="wDate" /></div>
+    <div><label>Your email (so Samantha can reply)</label><input type="email" id="email" placeholder="you@example.com" /></div>
+  </div>
 
-    <div class="group">
-      <h3>Family names</h3>
-      <div class="grid-3">
-        <div>
-          <label>Bride’s dad</label><input type="text" id="b_dad" placeholder="e.g., Tom">
-          <label>Bride’s mom</label><input type="text" id="b_mom" placeholder="e.g., Nancy">
-          <label>Bride’s siblings (comma-separated)</label><input type="text" id="b_siblings_names" placeholder="e.g., Lily, Grace">
-        </div>
-        <div>
-          <label>Groom’s dad</label><input type="text" id="g_dad" placeholder="e.g., Mark">
-          <label>Groom’s mom</label><input type="text" id="g_mom" placeholder="e.g., Susan">
-          <label>Groom’s siblings (comma-separated)</label><input type="text" id="g_siblings_names" placeholder="e.g., Jake, Ava">
-        </div>
+  <div class="group">
+    <h3>Family names</h3>
+    <div class="grid-3">
+      <div>
+        <label>Bride’s dad</label><input id="b_dad" placeholder="e.g., Tom" />
+        <label>Bride’s mom</label><input id="b_mom" placeholder="e.g., Nancy" />
+        <label>Bride’s siblings (comma-separated)</label><input id="b_siblings_names" placeholder="e.g., Lily, Grace" />
       </div>
-    </div>
-
-    <div class="group">
-      <h3>Family combinations</h3>
-
-      <!-- headings row -->
-      <div class="grid-3" style="margin-bottom:6px">
-        <div><strong>Bride’s Side</strong></div>
-        <div><strong>Groom’s Side</strong></div>
-        <div><strong>Couple</strong></div>
+      <div>
+        <label>Groom’s dad</label><input id="g_dad" placeholder="e.g., Mark" />
+        <label>Groom’s mom</label><input id="g_mom" placeholder="e.g., Susan" />
+        <label>Groom’s siblings (comma-separated)</label><input id="g_siblings_names" placeholder="e.g., Jake, Ava" />
       </div>
-
-      <div class="grid-3">
-        <!-- Bride’s Side -->
-        <div>
-          <label class="check"><input type="checkbox" id="b_parents_together">Bride + Parents together</label>
-          <label class="check"><input type="checkbox" id="b_with_mom">Bride + Mom</label>
-          <label class="check"><input type="checkbox" id="b_with_dad">Bride + Dad</label>
-          <label class="check"><input type="checkbox" id="b_siblings">Bride + Siblings</label>
-          <label class="check"><input type="checkbox" id="b_immediate">Bride + Immediate Family</label>
-
-          <!-- Couple + Bride’s family -->
-          <label class="check"><input type="checkbox" id="c_b_parents">Couple + Bride’s Parents together</label>
-          <label class="check"><input type="checkbox" id="c_b_mom">Couple + Bride’s Mom</label>
-          <label class="check"><input type="checkbox" id="c_b_dad">Couple + Bride’s Dad</label>
-          <label class="check"><input type="checkbox" id="c_b_sibs">Couple + Bride’s Siblings</label>
-          <label class="check"><input type="checkbox" id="c_b_immediate">Couple + Bride’s Immediate Family</label>
-        </div>
-
-        <!-- Groom’s Side -->
-        <div>
-          <label class="check"><input type="checkbox" id="g_parents_together">Groom + Parents together</label>
-          <label class="check"><input type="checkbox" id="g_with_mom">Groom + Mom</label>
-          <label class="check"><input type="checkbox" id="g_with_dad">Groom + Dad</label>
-          <label class="check"><input type="checkbox" id="g_siblings">Groom + Siblings</label>
-          <label class="check"><input type="checkbox" id="g_immediate">Groom + Immediate Family</label>
-
-          <!-- Couple + Groom’s family -->
-          <label class="check"><input type="checkbox" id="c_g_parents">Couple + Groom’s Parents together</label>
-          <label class="check"><input type="checkbox" id="c_g_mom">Couple + Groom’s Mom</label>
-          <label class="check"><input type="checkbox" id="c_g_dad">Couple + Groom’s Dad</label>
-          <label class="check"><input type="checkbox" id="c_g_sibs">Couple + Groom’s Siblings</label>
-          <label class="check"><input type="checkbox" id="c_g_immediate">Couple + Groom’s Immediate Family</label>
-        </div>
-
-        <!-- Couple (general) -->
-        <div>
-          <label class="check"><input type="checkbox" id="both_parents">Couple + Both Sets of Parents</label>
-          <label class="check"><input type="checkbox" id="both_immediate">Couple + Both Immediate Families</label>
-          <label class="check"><input type="checkbox" id="grandparents">Couple + Grandparents</label>
-          <label class="check"><input type="checkbox" id="nieces_nephews">Couple + Nieces/Nephews</label>
-          <label class="check"><input type="checkbox" id="extended">Couple + Extended Family</label>
-          <label class="check"><input type="checkbox" id="couple_gparents">Couple + Both Grandparents</label>
-          <label class="check"><input type="checkbox" id="couple_aunts_uncles">Couple + Aunts/Uncles</label>
-          <label class="check"><input type="checkbox" id="couple_cousins">Couple + Cousins</label>
-          <label class="check"><input type="checkbox" id="couple_godparents">Couple + Godparents</label>
-          <label class="check"><input type="checkbox" id="couple_friends">Couple + Close Friends</label>
-        </div>
-      </div>
-
-      <label style="margin-top:10px">Custom adds (one per line)</label>
-      <textarea id="customAdds" placeholder="Bride + College friends&#10;Groom + Godparents"></textarea>
-    </div>
-
-    <div class="group">
-      <h3>Bridal party</h3>
-      <div class="grid-3">
-        <div>
-          <label class="check"><input type="checkbox" id="wp_all">Couple + Entire Wedding Party</label>
-          <label class="check"><input type="checkbox" id="wp_bridesmaids">Bride + Bridesmaids</label>
-          <label class="check"><input type="checkbox" id="wp_groomsmen">Groom + Groomsmen</label>
-        </div>
-        <div>
-          <label class="check"><input type="checkbox" id="wp_individuals">Individuals with each bridesmaid/groomsman</label>
-          <label class="check"><input type="checkbox" id="wp_fg_rb">Couple + Flower Girls / Ring Bearers</label>
-        </div>
-      </div>
-      <label>Special requests (optional)</label>
-      <textarea id="special" placeholder="Any must-have groupings or VIPs we can’t miss"></textarea>
-    </div>
-
-    <div class="controls">
-      <button id="gen">Generate List</button>
-      <button class="alt" id="pdf">Download PDF</button>
-      <button class="alt" id="send">Send to Samantha</button>
     </div>
   </div>
 
-  <!-- RESULTS -->
-  <div class="results" id="results" hidden>
-    <div class="rl-section">Shot List (draft) – Samantha’s suggested groupings</div>
-    <div id="rlList"></div>
+  <div class="group">
+    <h3>Family combinations</h3>
+    <div class="grid-3" style="margin-bottom:6px">
+      <div><strong>Bride’s Side</strong></div>
+      <div><strong>Groom’s Side</strong></div>
+      <div><strong>Couple</strong></div>
+    </div>
+
+    <div class="grid-3">
+      <!-- Bride Side -->
+      <div>
+        <label class="check"><input type="checkbox" id="b_parents_together">Bride + Parents together</label>
+        <label class="check"><input type="checkbox" id="c_b_parents">Couple + Bride’s Parents together</label>
+
+        <label class="check"><input type="checkbox" id="b_with_mom">Bride + Mom</label>
+        <label class="check"><input type="checkbox" id="c_b_mom">Couple + Bride’s Mom</label>
+
+        <label class="check"><input type="checkbox" id="b_with_dad">Bride + Dad</label>
+        <label class="check"><input type="checkbox" id="c_b_dad">Couple + Bride’s Dad</label>
+
+        <label class="check"><input type="checkbox" id="b_siblings">Bride + Siblings</label>
+        <label class="check"><input type="checkbox" id="c_b_sibs">Couple + Bride’s Siblings</label>
+
+        <label class="check"><input type="checkbox" id="b_immediate">Bride + Immediate Family</label>
+        <label class="check"><input type="checkbox" id="c_b_immediate">Couple + Bride’s Immediate Family</label>
+      </div>
+
+      <!-- Groom Side -->
+      <div>
+        <label class="check"><input type="checkbox" id="g_parents_together">Groom + Parents together</label>
+        <label class="check"><input type="checkbox" id="c_g_parents">Couple + Groom’s Parents together</label>
+
+        <label class="check"><input type="checkbox" id="g_with_mom">Groom + Mom</label>
+        <label class="check"><input type="checkbox" id="c_g_mom">Couple + Groom’s Mom</label>
+
+        <label class="check"><input type="checkbox" id="g_with_dad">Groom + Dad</label>
+        <label class="check"><input type="checkbox" id="c_g_dad">Couple + Groom’s Dad</label>
+
+        <label class="check"><input type="checkbox" id="g_siblings">Groom + Siblings</label>
+        <label class="check"><input type="checkbox" id="c_g_sibs">Couple + Groom’s Siblings</label>
+
+        <label class="check"><input type="checkbox" id="g_immediate">Groom + Immediate Family</label>
+        <label class="check"><input type="checkbox" id="c_g_immediate">Couple + Groom’s Immediate Family</label>
+      </div>
+
+      <!-- Couple -->
+      <div>
+        <label class="check"><input type="checkbox" id="both_parents">Couple + Both Sets of Parents</label>
+        <label class="check"><input type="checkbox" id="both_immediate">Couple + Both Immediate Families</label>
+        <label class="check"><input type="checkbox" id="grandparents">Couple + Grandparents</label>
+        <label class="check"><input type="checkbox" id="nieces_nephews">Couple + Nieces/Nephews</label>
+        <label class="check"><input type="checkbox" id="extended">Couple + Extended Family</label>
+        <label class="check"><input type="checkbox" id="couple_aunts_uncles">Couple + Aunts/Uncles</label>
+        <label class="check"><input type="checkbox" id="couple_cousins">Couple + Cousins</label>
+        <label class="check"><input type="checkbox" id="couple_godparents">Couple + Godparents</label>
+        <label class="check"><input type="checkbox" id="couple_friends">Couple + Close Friends</label>
+      </div>
+    </div>
+
+    <label style="margin-top:10px">Custom adds (one per line)</label>
+    <textarea id="customAdds" placeholder="Bride + College friends&#10;Groom + Godparents"></textarea>
   </div>
+
+  <div class="group">
+    <h3>Bridal party</h3>
+    <div class="grid-3">
+      <div>
+        <label class="check"><input type="checkbox" id="wp_all">Couple + Entire Wedding Party</label>
+        <label class="check"><input type="checkbox" id="wp_bridesmaids">Bride + Bridesmaids</label>
+        <label class="check"><input type="checkbox" id="wp_groomsmen">Groom + Groomsmen</label>
+      </div>
+      <div>
+        <label class="check"><input type="checkbox" id="wp_individuals">Individuals with each bridesmaid/groomsman</label>
+        <label class="check"><input type="checkbox" id="wp_fg_rb">Couple + Flower Girls / Ring Bearers</label>
+      </div>
+    </div>
+    <label>Special requests (optional)</label>
+    <textarea id="special" placeholder="Any must-have groupings or VIPs we can’t miss"></textarea>
+  </div>
+
+  <div class="controls">
+    <button id="gen">Generate List</button>
+    <button class="alt" id="pdf">Download PDF</button>
+    <button class="alt" id="send">Send to Samantha</button>
+  </div>
+</div>
+
+<div class="results" id="results" hidden>
+  <div class="rl-section">Shot List (draft) – Samantha’s suggested groupings</div>
+  <div id="rlList"></div>
+</div>
 </div>
 
 <script>
 (function(){
-  const el=id=>document.getElementById(id);
+const el=id=>document.getElementById(id);
+function buildList(){
+ const bride=el('bride').value.trim()||'Bride', groom=el('groom').value.trim()||'Groom', wDate=el('wDate').value||'';
+ const bDad=(el('b_dad').value||'').trim(), bMom=(el('b_mom').value||'').trim(), gDad=(el('g_dad').value||'').trim(), gMom=(el('g_mom').value||'').trim();
+ const bSibs=(el('b_siblings_names').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+ const gSibs=(el('g_siblings_names').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+ const sections=[];
+ const brideItems=[], groomItems=[], combined=[], party=[];
+ if(el('b_with_mom').checked) brideItems.push(`Bride + ${bMom||'Mom'}`);
+ if(el('b_with_dad').checked) brideItems.push(`Bride + ${bDad||'Dad'}`);
+ if(el('b_parents_together').checked) brideItems.push(`Bride + ${bDad||'Dad'} + ${bMom||'Mom'}`);
+ if(el('b_siblings').checked) brideItems.push(`Bride + ${bSibs.length?bSibs.join(' + '):'Siblings'}`);
+ if(el('b_immediate').checked){const p=['Bride',(bDad||'Dad'),(bMom||'Mom')];if(bSibs.length)p.push(...bSibs);brideItems.push(p.join(' + '));}
+ if(brideItems.length) sections.push({title:"Bride’s Family",items:brideItems});
 
-  function buildList(){
-    const bride=el('bride').value.trim()||'Bride';
-    const groom=el('groom').value.trim()||'Groom';
-    const wDate=el('wDate').value||'';
+ if(el('g_with_mom').checked) groomItems.push(`Groom + ${gMom||'Mom'}`);
+ if(el('g_with_dad').checked) groomItems.push(`Groom + ${gDad||'Dad'}`);
+ if(el('g_parents_together').checked) groomItems.push(`Groom + ${gDad||'Dad'} + ${gMom||'Mom'}`);
+ if(el('g_siblings').checked) groomItems.push(`Groom + ${gSibs.length?gSibs.join(' + '):'Siblings'}`);
+ if(el('g_immediate').checked){const p=['Groom',(gDad||'Dad'),(gMom||'Mom')];if(gSibs.length)p.push(...gSibs);groomItems.push(p.join(' + '));}
+ if(groomItems.length) sections.push({title:"Groom’s Family",items:groomItems});
 
-    // Names
-    const bDad=(el('b_dad').value||'').trim();
-    const bMom=(el('b_mom').value||'').trim();
-    const gDad=(el('g_dad').value||'').trim();
-    const gMom=(el('g_mom').value||'').trim();
-    const bSibs=(el('b_siblings_names').value||'').split(',').map(s=>s.trim()).filter(Boolean);
-    const gSibs=(el('g_siblings_names').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+ if(el('both_parents').checked) combined.push('Couple + Both Sets of Parents');
+ if(el('both_immediate').checked){const names=['Couple'];if(bDad||bMom)names.push(bDad,bMom);if(gDad||gMom)names.push(gDad,gMom);if(bSibs.length)names.push(...bSibs);if(gSibs.length)names.push(...gSibs);combined.push(names.join(' + '));}
+ if(el('grandparents').checked)combined.push('Couple + Grandparents');
+ if(el('nieces_nephews').checked)combined.push('Couple + Nieces/Nephews');
+ if(el('extended').checked)combined.push('Couple + Extended Family');
+ if(el('c_b_parents').checked)combined.push(`Couple + ${(bDad||"Bride’s Dad")} + ${(bMom||"Bride’s Mom")}`);
+ if(el('c_b_mom').checked)combined.push(`Couple + ${(bMom||"Bride’s Mom")}`);
+ if(el('c_b_dad').checked)combined.push(`Couple + ${(bDad||"Bride’s Dad")}`);
+ if(el('c_b_sibs').checked)combined.push(`Couple + ${bSibs.length?bSibs.join(' + '):"Bride’s Siblings"}`);
+ if(el('c_b_immediate').checked){const a=['Couple'];if(bDad||bMom)a.push(bDad,bMom);if(bSibs.length)a.push(...bSibs);combined.push(a.join(' + '));}
+ if(el('c_g_parents').checked)combined.push(`Couple + ${(gDad||"Groom’s Dad")} + ${(gMom||"Groom’s Mom")}`);
+ if(el('c_g_mom').checked)combined.push(`Couple + ${(gMom||"Groom’s Mom")}`);
+ if(el('c_g_dad').checked)combined.push(`Couple + ${(gDad||"Groom’s Dad")}`);
+ if(el('c_g_sibs').checked)combined.push(`Couple + ${gSibs.length?gSibs.join(' + '):"Groom’s Siblings"}`);
+ if(el('c_g_immediate').checked){const a=['Couple'];if(gDad||gMom)a.push(gDad,gMom);if(gSibs.length)a.push(...gSibs);combined.push(a.join(' + '));}
+ if(combined.length)sections.push({title:"Combined Groups",items:combined});
 
-    const sections=[];
+ if(el('wp_all').checked)party.push('Couple + Entire Wedding Party');
+ if(el('wp_bridesmaids').checked)party.push('Bride + Bridesmaids');
+ if(el('wp_groomsmen').checked)party.push('Groom + Groomsmen');
+ if(el('wp_individuals').checked)party.push('Individuals with each bridesmaid/groomsman');
+ if(el('wp_fg_rb').checked)party.push('Couple + Flower Girls / Ring Bearers');
+ if(party.length)sections.push({title:"Wedding Party",items:party});
 
-    // Bride’s Family
-    const brideItems=[];
-    if(el('b_with_mom').checked) brideItems.push(`Bride + ${bMom || 'Mom'}`);
-    if(el('b_with_dad').checked) brideItems.push(`Bride + ${bDad || 'Dad'}`);
-    if(el('b_parents_together').checked) brideItems.push(`Bride + ${bDad || 'Dad'} + ${bMom || 'Mom'}`);
-    if(el('b_siblings').checked) brideItems.push(`Bride + ${bSibs.length ? bSibs.join(' + ') : 'Siblings'}`);
-    if(el('b_immediate').checked){
-      const parts=['Bride', (bDad||'Dad'), (bMom||'Mom')];
-      if(bSibs.length) parts.push(...bSibs);
-      brideItems.push(parts.join(' + '));
-    }
-    if(brideItems.length) sections.push({title:"Bride’s Family", items:brideItems});
+ const adds=(el('customAdds').value||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
+ if(adds.length)sections.push({title:'Custom Adds',items:adds});
+ const special=(el('special').value||'').trim();if(special)sections.push({title:'Special Requests',items:[special]});
 
-    // Groom’s Family
-    const groomItems=[];
-    if(el('g_with_mom').checked) groomItems.push(`Groom + ${gMom || 'Mom'}`);
-    if(el('g_with_dad').checked) groomItems.push(`Groom + ${gDad || 'Dad'}`);
-    if(el('g_parents_together').checked) groomItems.push(`Groom + ${gDad || 'Dad'} + ${gMom || 'Mom'}`);
-    if(el('g_siblings').checked) groomItems.push(`Groom + ${gSibs.length ? gSibs.join(' + ') : 'Siblings'}`);
-    if(el('g_immediate').checked){
-      const parts=['Groom', (gDad||'Dad'), (gMom||'Mom')];
-      if(gSibs.length) parts.push(...gSibs);
-      groomItems.push(parts.join(' + '));
-    }
-    if(groomItems.length) sections.push({title:"Groom’s Family", items:groomItems});
-
-    // Combined / Couple +
-    const combined=[];
-    if(el('both_parents').checked) combined.push('Couple + Both Sets of Parents');
-
-    // FIXED: Both Immediate Families (plain names only)
-    if(el('both_immediate').checked){
-      const names=['Couple'];
-      if(bDad||bMom) names.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom");
-      if(gDad||gMom) names.push(gDad||"Groom’s Dad", gMom||"Groom’s Mom");
-      if(bSibs.length) names.push(...bSibs);
-      if(gSibs.length) names.push(...gSibs);
-      combined.push(names.join(' + '));
-    }
-
-    if(el('grandparents').checked) combined.push('Couple + Grandparents');
-    if(el('nieces_nephews').checked) combined.push('Couple + Nieces/Nephews');
-    if(el('extended').checked) combined.push('Couple + Extended Family');
-
-    // Couple + Bride’s side
-    if(el('c_b_parents').checked) combined.push(`Couple + ${(bDad||"Bride’s Dad")} + ${(bMom||"Bride’s Mom")}`);
-    if(el('c_b_mom').checked) combined.push(`Couple + ${(bMom||"Bride’s Mom")}`);
-    if(el('c_b_dad').checked) combined.push(`Couple + ${(bDad||"Bride’s Dad")}`);
-    if(el('c_b_sibs').checked) combined.push(`Couple + ${bSibs.length ? bSibs.join(' + ') : "Bride’s Siblings"}`);
-    if(el('c_b_immediate').checked){
-      const arr=['Couple'];
-      if(bDad||bMom) arr.push(bDad||"Bride’s Dad", bMom||"Bride’s Mom");
-      if(bSibs.length) arr.push(...bSibs);
-      combined.push(arr.join(' + '));
-    }
-
-    // Couple + Groom’s side
-    if(el('c_g_parents').checked) combined.push(`Couple + ${(gDad||"Groom’s Dad")} + ${(gMom||"Groom’s Mom")}`);
-    if(el('c_g_mom').checked) combined.push(`Couple + ${(gMom||"Groom’s Mom")}`);
-    if(el('c_g_dad').checked) combined.push(`Couple + ${(gDad||"Groom’s Dad")}`);
-    if(el('c_g_sibs').checked) combined.push(`Couple + ${gSibs.length ? gSibs.join(' + ') : "Groom’s Siblings"}`);
-    if(el('c_g_immediate').checked){
-      const arr=['Couple'];
-      if(gDad||gMom) arr.push(gDad||"Groom’s Dad", gMom||"Groom’s Mom");
-      if(gSibs.length) arr.push(...gSibs);
-      combined.push(arr.join(' + '));
-    }
-
-    if(combined.length) sections.push({title:"Combined Groups", items:combined});
-
-    // Wedding party
-    const party=[];
-    if(el('wp_all').checked) party.push('Couple + Entire Wedding Party');
-    if(el('wp_bridesmaids').checked) party.push('Bride + Bridesmaids');
-    if(el('wp_groomsmen').checked) party.push('Groom + Groomsmen');
-    if(el('wp_individuals').checked) party.push('Individuals with each bridesmaid/groomsman');
-    if(el('wp_fg_rb').checked) party.push('Couple + Flower Girls / Ring Bearers');
-    if(party.length) sections.push({title:"Wedding Party", items:party});
-
-    // Custom adds
-    const addsRaw=(el('customAdds').value||'').trim();
-    if(addsRaw){
-      const adds=addsRaw.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-      if(adds.length) sections.push({title:'Custom Adds', items:adds});
-    }
-
-    // Special requests
-    const special=(el('special').value||'').trim();
-    if(special){ sections.push({title:'Special Requests', items:[special]}); }
-
-    // Render
-    const container=el('rlList'); container.innerHTML='';
-    const meta=document.createElement('div');
-    meta.className='rl-item';
-    meta.innerHTML=`<div><strong>Couple:</strong> ${bride} + ${groom}${wDate?` &nbsp;&nbsp; <strong>Date:</strong> ${wDate}`:''}</div><div class='hint'>This is a starting outline. Samantha will review and refine before wedding day.</div>`;
-    container.appendChild(meta);
-
-    let counter=1;
-    sections.forEach(sec=>{
-      const s=document.createElement('div'); s.className='rl-section'; s.textContent=sec.title; container.appendChild(s);
-      sec.items.forEach(it=>{
-        const li=document.createElement('div'); li.className='rl-item';
-        li.textContent=`${counter}. ${it}`; counter++; container.appendChild(li);
-      });
-    });
-
-    el('results').hidden=false;
-  }
-
-  // PDF (simple, branded)
-  function downloadPDF(){
-    const { jsPDF } = window.jspdf;
-    const pdf=new jsPDF({orientation:'portrait',unit:'pt',format:'letter'});
-    const brand='#9a633e';
-    const bride=el('bride').value.trim()||'Bride';
-    const groom=el('groom').value.trim()||'Groom';
-    const wDate=el('wDate').value||'';
-
-    pdf.setFont('helvetica','bold'); pdf.setFontSize(18); pdf.setTextColor(brand);
-    pdf.text('Rule Creative Co. – Wedding Day Shot List',40,60);
-    pdf.setFont('helvetica','italic'); pdf.setFontSize(11); pdf.setTextColor('#333');
-    const lines=pdf.splitTextToSize('Use this as a smart starting point. We’ll review and refine your family photo list together to fit your people and your day.',520);
-    let y=80; lines.forEach(l=>{ pdf.text(l,40,y); y+=14; });
-    y+=6; pdf.setDrawColor(brand); pdf.line(40,y,560,y); y+=22;
-    pdf.setFont('helvetica','normal'); pdf.setFontSize(11); pdf.setTextColor('#000');
-    pdf.text(`Couple: ${bride} + ${groom}${wDate?`   Date: ${wDate}`:''}`,40,y); y+=22;
-
-    if(document.querySelector('#rlList').children.length===0) buildList();
-    const addPageIfNeeded=()=>{ if(y>740){ pdf.addPage(); y=60; } };
-    document.querySelectorAll('#rlList > *').forEach(node=>{
-      if(node.classList.contains('rl-section')){
-        addPageIfNeeded(); pdf.setFont('times','bold'); pdf.setFontSize(14); pdf.setTextColor(brand);
-        y+=10; pdf.text(node.textContent.trim(),40,y); y+=8; pdf.setDrawColor(brand); pdf.line(40,y,550,y); y+=16;
-      } else {
-        addPageIfNeeded(); pdf.setFont('helvetica','normal'); pdf.setFontSize(11); pdf.setTextColor('#000');
-        pdf.text(node.textContent.trim(),50,y); y+=16;
-      }
-    });
-    const pages=pdf.getNumberOfPages();
-    for(let i=1;i<=pages;i++){ pdf.setPage(i); pdf.setFont('helvetica','italic'); pdf.setFontSize(10); pdf.setTextColor(brand);
-      pdf.text('Questions or want Samantha to optimize this list? I’d love to help!',40,770);
-      pdf.setFont('helvetica','bold'); pdf.textWithLink('hello@rulecreativeco.com',40,784,{url:'mailto:hello@rulecreativeco.com'}); }
-    pdf.save('shot-list.pdf');
-  }
-
-  function sendToSamantha(){
-    const email=(el('email').value||'').trim();
-    const bride=el('bride').value.trim()||'Bride';
-    const groom=el('groom').value.trim()||'Groom';
-    const wDate=el('wDate').value||'';
-    if(el('results').hidden) buildList();
-
-    let body=`Couple: ${bride} + ${groom}%0D%0A`; if(wDate) body+=`Date: ${wDate}%0D%0A`; if(email) body+=`Reply-to: ${email}%0D%0A`; body+=`%0D%0AShot List:%0D%0A`;
-    document.querySelectorAll('#rlList > *').forEach(n=>{ body+=`- ${encodeURIComponent(n.textContent.trim())}%0D%0A`; });
-    const subject=encodeURIComponent(`Shot List – ${bride} + ${groom}${wDate?` (${wDate})`:''}`);
-    window.location.href=`mailto:hello@rulecreativeco.com?subject=${subject}&body=${body}`;
-  }
-
-  document.addEventListener('DOMContentLoaded',()=>{
-    document.getElementById('gen').onclick=buildList;
-    document.getElementById('pdf').onclick=downloadPDF;
-    document.getElementById('send').onclick=sendToSamantha;
-  });
-})();
-</script>
-</body>
-</html>
+ const c=el('rlList');c.innerHTML='';
+ const meta=document.createElement('div');meta.className='rl-item';
+ meta.innerHTML=`<div><strong>Couple:</strong> ${bride} + ${groom}${wDate?`   <strong>Date:</strong> ${wDate}`:''}</div><div class='hint'>This is a
